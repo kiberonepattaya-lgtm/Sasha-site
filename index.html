@@ -354,7 +354,7 @@
     canvas.width = 1400;
     canvas.height = 900;
 
-    const WEAPONS = [
+    const BASE_WEAPONS = [
       { name: 'RIFLE', fireRate: 0.15, damage: 20, speed: 500, color: '#ffff00', spread: 0, price: 0 },
       { name: 'SHOTGUN', fireRate: 0.4, damage: 35, speed: 400, color: '#ff8800', spread: 0.3, price: 0 },
       { name: 'LASER', fireRate: 0.08, damage: 12, speed: 700, color: '#00ff00', spread: 0, price: 0 },
@@ -362,6 +362,46 @@
       { name: 'RAILGUN', fireRate: 0.6, damage: 90, speed: 1200, color: '#66ffff', spread: 0, price: 220 },
       { name: 'PLASMA', fireRate: 0.25, damage: 40, speed: 550, color: '#cc66ff', spread: 0.05, price: 300 }
     ];
+
+    // Procedurally builds extra guns on top of BASE_WEAPONS: 5 rotating archetypes
+    // (SMG/RIFLE/SHOTGUN/SNIPER/BEAM) whose stats scale up with tier, priced
+    // to match, so the shop list is a real progression instead of 80 clones.
+    function generateExtraWeapons(count, startPrice) {
+      const PREFIXES = ['IRON', 'STORM', 'VOID', 'SOLAR', 'TOXIC', 'CRIMSON', 'SHADOW', 'FROST', 'EMBER', 'QUANTUM',
+        'PLASMA', 'NOVA', 'TITAN', 'VORTEX', 'PHANTOM', 'COBALT', 'OBSIDIAN', 'RADIANT', 'DOOM', 'CHROME'];
+      const SUFFIXES = ['RIFLE', 'CANNON', 'BLASTER', 'REPEATER', 'SMASHER', 'RIPPER', 'PIERCER', 'STRIKER',
+        'REAPER', 'BUSTER', 'FANG', 'TALON', 'JUDGE', 'EXECUTOR', 'HOWLER'];
+      const CLASSES = [
+        { fireRate: 0.05, damage: 6, speed: 620, spread: 0.12 },   // SMG
+        { fireRate: 0.13, damage: 16, speed: 560, spread: 0 },     // RIFLE
+        { fireRate: 0.45, damage: 28, speed: 420, spread: 0.35 },  // SHOTGUN
+        { fireRate: 0.9, damage: 110, speed: 1400, spread: 0 },    // SNIPER
+        { fireRate: 0.07, damage: 9, speed: 900, spread: 0 }       // BEAM
+      ];
+      const COLORS = ['#ffff00', '#ff8800', '#00ff00', '#ff66cc', '#66ffff', '#cc66ff', '#ff3b57', '#4dff9e',
+        '#b57bff', '#ffd23c', '#ff7a3d', '#7fe0ff', '#6fae3a', '#b3001b', '#7b2fff', '#d8e8ff'];
+
+      const list = [];
+      for (let i = 0; i < count; i++) {
+        const cls = CLASSES[i % CLASSES.length];
+        const tier = Math.floor(i / PREFIXES.length);
+        const prefix = PREFIXES[i % PREFIXES.length];
+        const suffix = SUFFIXES[Math.floor(i / PREFIXES.length) % SUFFIXES.length];
+        const growth = 1 + tier * 0.35;
+        list.push({
+          name: prefix + ' ' + suffix,
+          fireRate: Math.max(0.03, +(cls.fireRate * (1 - tier * 0.015)).toFixed(3)),
+          damage: Math.round(cls.damage * growth),
+          speed: Math.round(cls.speed * (1 + tier * 0.05)),
+          color: COLORS[i % COLORS.length],
+          spread: cls.spread,
+          price: startPrice + i * 45 + tier * 60
+        });
+      }
+      return list;
+    }
+
+    const WEAPONS = BASE_WEAPONS.concat(generateExtraWeapons(80, 350));
 
     const MONSTERS = [
       { name: 'WRAITH', hp: 100, speed: 180, size: 25, color: '#333333', eyeColor: '#ff0000', desc: 'Wraith' },
