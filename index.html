@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,6 +51,26 @@
       background: rgba(0, 0, 0, 0.7);
       padding: clamp(6px, 2vw, 15px);
       border: 1px solid #666;
+    }
+    #coinBar {
+      position: fixed;
+      top: clamp(6px, 2vw, 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 2px solid #ffd23c;
+      border-radius: 999px;
+      padding: clamp(6px, 1.6vw, 10px) clamp(16px, 4vw, 26px);
+      color: #ffd23c;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: clamp(14px, 3.2vw, 20px);
+      letter-spacing: 0.03em;
+      box-shadow: 0 0 12px rgba(255, 210, 60, 0.25);
     }
     #topRight {
       position: fixed;
@@ -277,9 +298,9 @@
   <div id="hud">
     <div>KILLS: <span id="kills">0</span></div>
     <div>SURVIVAL TIME: <span id="time">0</span>s</div>
-    <div>COINS: <span id="coinsHud">0</span></div>
     <div id="monsterType" style="margin-top: 10px; color: #ff6666;">Monster: ???</div>
   </div>
+  <div id="coinBar">🪙 <span id="coinsHud">0</span></div>
   <div id="topRight">
     <div id="weapon">
       WEAPON: <span id="weaponName">RIFLE</span><br>
