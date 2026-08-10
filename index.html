@@ -51,19 +51,40 @@
       padding: clamp(6px, 2vw, 15px);
       border: 1px solid #666;
     }
-    #weapon {
+    #topRight {
       position: fixed;
       top: clamp(6px, 2vw, 20px);
       right: clamp(6px, 2vw, 20px);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(6px, 1.5vw, 10px);
+      align-items: flex-end;
+    }
+    #weapon, #skinBtn, #shopBtn, #pauseBtn {
       color: #ffff00;
       font-family: Arial, sans-serif;
       font-size: clamp(12px, 3vw, 18px);
       font-weight: bold;
-      z-index: 100;
       background: rgba(0, 0, 0, 0.7);
       padding: clamp(6px, 2vw, 15px);
       border: 2px solid #ffff00;
       cursor: pointer;
+      text-align: left;
+    }
+    #skinBtn {
+      color: #66ffff;
+      border-color: #66ffff;
+    }
+    #shopBtn {
+      color: #ffaa00;
+      border-color: #ffaa00;
+      text-align: center;
+    }
+    #pauseBtn {
+      color: #ccc;
+      border-color: #888;
+      text-align: center;
     }
     #inventory {
       position: fixed;
@@ -156,6 +177,97 @@
     #gameOver button:hover {
       background: #888;
     }
+
+    #pauseOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      background: rgba(0, 0, 0, 0.75);
+    }
+    #pauseOverlay h1 {
+      color: #fff;
+      font-size: 32px;
+      letter-spacing: 0.1em;
+      margin: 0;
+    }
+    #pauseOverlay button {
+      padding: 12px 30px;
+      background: #666;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #pauseOverlay button:hover { background: #888; }
+
+    #shopOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 250;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.85);
+    }
+    #shopPanel {
+      background: rgba(10, 10, 10, 0.98);
+      border: 2px solid #ffaa00;
+      padding: clamp(14px, 3vw, 28px);
+      max-width: 640px;
+      width: 92vw;
+      max-height: 86vh;
+      overflow-y: auto;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+    #shopPanel h2 { margin: 0 0 4px 0; color: #ffaa00; text-align: center; }
+    #shopCoinsDisplay { text-align: center; color: #ffd23c; font-weight: bold; margin-bottom: 14px; font-size: 16px; }
+    .shopSection { font-weight: bold; color: #aaa; margin: 14px 0 8px; letter-spacing: 0.05em; }
+    #skinGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+    .skinCell {
+      border: 2px solid #444;
+      border-radius: 4px;
+      padding: 6px 4px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    .skinCell .swatch { width: 28px; height: 28px; border-radius: 50%; margin: 0 auto 4px; border: 2px solid rgba(255,255,255,0.4); }
+    .skinCell.owned { border-color: #4dff9e; }
+    .skinCell.equipped { border-color: #ffd23c; background: rgba(255,210,60,0.12); }
+    .skinCell.locked { opacity: 0.75; }
+    #weaponList { display: flex; flex-direction: column; gap: 6px; }
+    .weaponRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 2px solid #444;
+      border-radius: 4px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .weaponRow.owned { border-color: #4dff9e; }
+    .weaponRow.equipped { border-color: #ffd23c; background: rgba(255,210,60,0.12); }
+    .weaponRow.locked { opacity: 0.75; }
+    #shopClose {
+      display: block;
+      margin: 18px auto 0;
+      padding: 10px 26px;
+      background: #666;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    #shopClose:hover { background: #888; }
   </style>
 </head>
 <body>
@@ -165,23 +277,49 @@
   <div id="hud">
     <div>KILLS: <span id="kills">0</span></div>
     <div>SURVIVAL TIME: <span id="time">0</span>s</div>
+    <div>COINS: <span id="coinsHud">0</span></div>
     <div id="monsterType" style="margin-top: 10px; color: #ff6666;">Monster: ???</div>
   </div>
-  <div id="weapon">
-    WEAPON: <span id="weaponName">RIFLE</span><br>
-    <span style="font-size: 12px; color: #aaa;">ENTER to switch</span>
+  <div id="topRight">
+    <div id="weapon">
+      WEAPON: <span id="weaponName">RIFLE</span><br>
+      <span style="font-size: 12px; color: #aaa;">ENTER to switch</span>
+    </div>
+    <div id="skinBtn">
+      SKIN: <span id="skinName">STANDARD</span><br>
+      <span style="font-size: 12px; color: #aaa;">TAB to switch</span>
+    </div>
+    <div id="shopBtn">SHOP</div>
+    <div id="pauseBtn">⏸ PAUSE</div>
   </div>
   <div id="inventory">
     <div style="color: #ffaa00; margin-bottom: 8px; font-weight: bold;">BASE SAFE ZONE</div>
     <div style="font-size: 12px; color: #888;">
-      <span class="desktoponly">SPACE: Shoot ∞<br>Arrow Keys: Move<br>ENTER: Switch Gun</span>
-      <span class="touchonly">Joystick: Move<br>FIRE button: Shoot (auto-aim)<br>Tap WEAPON: Switch Gun</span>
+      <span class="desktoponly">SPACE: Shoot ∞<br>Arrow Keys: Move<br>ENTER: Switch Gun<br>TAB: Switch Skin<br>P: Pause</span>
+      <span class="touchonly">Joystick: Move<br>FIRE button: Shoot (auto-aim)<br>Tap WEAPON/SKIN: Switch</span>
     </div>
   </div>
   <div id="gameOver">
     <h1>YOU DIED</h1>
     <p id="finalStats"></p>
     <button onclick="location.reload()">TRY AGAIN</button>
+  </div>
+
+  <div id="pauseOverlay">
+    <h1>PAUSED</h1>
+    <button id="resumeBtn">RESUME</button>
+  </div>
+
+  <div id="shopOverlay">
+    <div id="shopPanel">
+      <h2>ARMORY</h2>
+      <div id="shopCoinsDisplay">COINS: <span id="shopCoins">0</span></div>
+      <div class="shopSection">SKINS</div>
+      <div id="skinGrid"></div>
+      <div class="shopSection">WEAPONS</div>
+      <div id="weaponList"></div>
+      <button id="shopClose">CLOSE</button>
+    </div>
   </div>
 
   <div id="joystickZone"></div>
@@ -196,9 +334,12 @@
     canvas.height = 900;
 
     const WEAPONS = [
-      { name: 'RIFLE', fireRate: 0.15, damage: 20, speed: 500, color: '#ffff00', spread: 0 },
-      { name: 'SHOTGUN', fireRate: 0.4, damage: 35, speed: 400, color: '#ff8800', spread: 0.3 },
-      { name: 'LASER', fireRate: 0.08, damage: 12, speed: 700, color: '#00ff00', spread: 0 }
+      { name: 'RIFLE', fireRate: 0.15, damage: 20, speed: 500, color: '#ffff00', spread: 0, price: 0 },
+      { name: 'SHOTGUN', fireRate: 0.4, damage: 35, speed: 400, color: '#ff8800', spread: 0.3, price: 0 },
+      { name: 'LASER', fireRate: 0.08, damage: 12, speed: 700, color: '#00ff00', spread: 0, price: 0 },
+      { name: 'MINIGUN', fireRate: 0.05, damage: 8, speed: 650, color: '#ff66cc', spread: 0.15, price: 150 },
+      { name: 'RAILGUN', fireRate: 0.6, damage: 90, speed: 1200, color: '#66ffff', spread: 0, price: 220 },
+      { name: 'PLASMA', fireRate: 0.25, damage: 40, speed: 550, color: '#cc66ff', spread: 0.05, price: 300 }
     ];
 
     const MONSTERS = [
@@ -215,6 +356,7 @@
     let gameState = {
       kills: 0,
       gameOver: false,
+      paused: false,
       time: 0,
       currentWeapon: 0,
       spawnTimer: 3,
@@ -247,12 +389,173 @@
     let mouseX = canvas.width / 2;
     let mouseY = canvas.height / 2;
 
+    const SKINS = [
+      { name: 'STANDARD', color: '#00ccff', price: 0 },
+      { name: 'CRIMSON', color: '#ff3b57', price: 40 },
+      { name: 'TOXIC', color: '#4dff9e', price: 40 },
+      { name: 'ROYAL', color: '#b57bff', price: 50 },
+      { name: 'GOLD', color: '#ffd23c', price: 60 },
+      { name: 'EMBER', color: '#ff7a3d', price: 60 },
+      { name: 'FROST', color: '#7fe0ff', price: 60 },
+      { name: 'PLAGUE', color: '#6fae3a', price: 70 },
+      { name: 'BLOOD', color: '#b3001b', price: 70 },
+      { name: 'VOID', color: '#7b2fff', price: 80 },
+      { name: 'GHOST', color: '#d8e8ff', price: 80 },
+      { name: 'OBSIDIAN', color: '#4a4a55', price: 90 },
+      { name: 'INFERNO', color: '#ff4500', price: 90 },
+      { name: 'ABYSS', color: '#4b0082', price: 100 },
+      { name: 'NEON', color: '#39ff14', price: 100 },
+      { name: 'STORM', color: '#4a6572', price: 110 },
+      { name: 'SOLAR', color: '#ffb300', price: 120 },
+      { name: 'LUNAR', color: '#b0c4de', price: 120 },
+      { name: 'CRIMSON KING', color: '#8b0000', price: 150 },
+      { name: 'ETERNAL', color: '#ffffff', price: 200 }
+    ];
+
+    // ===== Coins & unlock economy =====
+    function loadIdxArray(key, fallback) {
+      try {
+        const v = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(v) ? v : fallback;
+      } catch (e) { return fallback; }
+    }
+    let walletCoins = parseInt(localStorage.getItem('scavCoins') || '0', 10);
+    let unlockedSkins = loadIdxArray('scavUnlockedSkins', [0]);
+    let unlockedWeapons = loadIdxArray('scavUnlockedWeapons', [0, 1, 2]);
+    function saveCoins() { localStorage.setItem('scavCoins', String(walletCoins)); }
+    function saveUnlockedSkins() { localStorage.setItem('scavUnlockedSkins', JSON.stringify(unlockedSkins)); }
+    function saveUnlockedWeapons() { localStorage.setItem('scavUnlockedWeapons', JSON.stringify(unlockedWeapons)); }
+    function addCoins(n) {
+      walletCoins += n;
+      saveCoins();
+      const shopEl = document.getElementById('shopCoins');
+      if (shopEl) shopEl.textContent = walletCoins;
+      const hudEl = document.getElementById('coinsHud');
+      if (hudEl) hudEl.textContent = walletCoins;
+    }
+
+    let coinDrops = [];
+    function dropCoin(x, y, value) {
+      coinDrops.push({ x, y, value, phase: Math.random() * Math.PI * 2 });
+    }
+
+    let currentSkin = parseInt(localStorage.getItem('scavSkin') || '0', 10);
+    if (!(currentSkin >= 0 && currentSkin < SKINS.length) || !unlockedSkins.includes(currentSkin)) currentSkin = 0;
+    document.getElementById('skinName').textContent = SKINS[currentSkin].name;
+
+    function cycleSkin() {
+      const owned = SKINS.map((_, i) => i).filter(i => unlockedSkins.includes(i));
+      if (owned.length === 0) return;
+      const pos = owned.indexOf(currentSkin);
+      currentSkin = owned[(pos + 1) % owned.length];
+      localStorage.setItem('scavSkin', String(currentSkin));
+      document.getElementById('skinName').textContent = SKINS[currentSkin].name;
+    }
+
+    function cycleWeapon() {
+      const owned = WEAPONS.map((_, i) => i).filter(i => unlockedWeapons.includes(i));
+      if (owned.length === 0) return;
+      const pos = owned.indexOf(gameState.currentWeapon);
+      gameState.currentWeapon = owned[(pos + 1) % owned.length];
+      document.getElementById('weaponName').textContent = WEAPONS[gameState.currentWeapon].name;
+    }
+
+    function togglePause() {
+      if (gameState.gameOver) return;
+      if (document.getElementById('shopOverlay').style.display === 'flex') return;
+      gameState.paused = !gameState.paused;
+      document.getElementById('pauseOverlay').style.display = gameState.paused ? 'flex' : 'none';
+    }
+
+    function openShop() {
+      if (gameState.gameOver) return;
+      gameState.paused = true;
+      document.getElementById('pauseOverlay').style.display = 'none';
+      document.getElementById('shopOverlay').style.display = 'flex';
+      renderShop();
+    }
+    function closeShop() {
+      document.getElementById('shopOverlay').style.display = 'none';
+      gameState.paused = false;
+    }
+
+    function renderShop() {
+      document.getElementById('shopCoins').textContent = walletCoins;
+
+      const skinGrid = document.getElementById('skinGrid');
+      skinGrid.innerHTML = '';
+      SKINS.forEach((skin, i) => {
+        const owned = unlockedSkins.includes(i);
+        const equipped = i === currentSkin;
+        const cell = document.createElement('div');
+        cell.className = 'skinCell' + (owned ? ' owned' : ' locked') + (equipped ? ' equipped' : '');
+        cell.innerHTML = `
+          <div class="swatch" style="background:${skin.color}"></div>
+          <div>${skin.name}</div>
+          <div>${owned ? (equipped ? 'EQUIPPED' : 'EQUIP') : '$' + skin.price}</div>
+        `;
+        cell.addEventListener('click', () => {
+          if (owned) {
+            currentSkin = i;
+            localStorage.setItem('scavSkin', String(currentSkin));
+            document.getElementById('skinName').textContent = skin.name;
+            renderShop();
+          } else if (walletCoins >= skin.price) {
+            walletCoins -= skin.price;
+            saveCoins();
+            unlockedSkins.push(i);
+            saveUnlockedSkins();
+            currentSkin = i;
+            localStorage.setItem('scavSkin', String(currentSkin));
+            document.getElementById('skinName').textContent = skin.name;
+            renderShop();
+          }
+        });
+        skinGrid.appendChild(cell);
+      });
+
+      const weaponList = document.getElementById('weaponList');
+      weaponList.innerHTML = '';
+      WEAPONS.forEach((wpn, i) => {
+        const owned = unlockedWeapons.includes(i);
+        const equipped = i === gameState.currentWeapon;
+        const row = document.createElement('div');
+        row.className = 'weaponRow' + (owned ? ' owned' : ' locked') + (equipped ? ' equipped' : '');
+        row.innerHTML = `
+          <span style="color:${wpn.color}">${wpn.name}</span>
+          <span>${owned ? (equipped ? 'EQUIPPED' : 'EQUIP') : '$' + wpn.price}</span>
+        `;
+        row.addEventListener('click', () => {
+          if (owned) {
+            gameState.currentWeapon = i;
+            document.getElementById('weaponName').textContent = wpn.name;
+            renderShop();
+          } else if (walletCoins >= wpn.price) {
+            walletCoins -= wpn.price;
+            saveCoins();
+            unlockedWeapons.push(i);
+            saveUnlockedWeapons();
+            gameState.currentWeapon = i;
+            document.getElementById('weaponName').textContent = wpn.name;
+            renderShop();
+          }
+        });
+        weaponList.appendChild(row);
+      });
+    }
+
     const keys = {};
     window.addEventListener('keydown', (e) => {
       keys[e.key.toLowerCase()] = true;
       if (e.key === 'Enter') {
-        gameState.currentWeapon = (gameState.currentWeapon + 1) % WEAPONS.length;
-        document.getElementById('weaponName').textContent = WEAPONS[gameState.currentWeapon].name;
+        cycleWeapon();
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        cycleSkin();
+      }
+      if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+        togglePause();
       }
     });
     window.addEventListener('keyup', (e) => {
@@ -266,10 +569,12 @@
       player.angle = Math.atan2(mouseY - player.y, mouseX - player.x);
     });
 
-    document.getElementById('weapon').addEventListener('click', () => {
-      gameState.currentWeapon = (gameState.currentWeapon + 1) % WEAPONS.length;
-      document.getElementById('weaponName').textContent = WEAPONS[gameState.currentWeapon].name;
-    });
+    document.getElementById('weapon').addEventListener('click', cycleWeapon);
+    document.getElementById('skinBtn').addEventListener('click', cycleSkin);
+    document.getElementById('shopBtn').addEventListener('click', openShop);
+    document.getElementById('shopClose').addEventListener('click', closeShop);
+    document.getElementById('pauseBtn').addEventListener('click', togglePause);
+    document.getElementById('resumeBtn').addEventListener('click', togglePause);
 
     // ===== Touch controls: joystick (move) + shoot button (auto-aim fire) =====
     const joystickZone = document.getElementById('joystickZone');
@@ -436,7 +741,7 @@
     }
 
     function update(deltaTime) {
-      if (gameState.gameOver) return;
+      if (gameState.gameOver || gameState.paused) return;
 
       gameState.time += deltaTime;
 
@@ -529,6 +834,7 @@
               gameState.kills++;
               gameState.monsterCount--;
               const wasBoss = m.isBoss;
+              dropCoin(m.x, m.y, wasBoss ? 100 : 5);
               monsters.splice(j, 1);
               if (wasBoss) {
                 gameState.bossActive = false;
@@ -546,6 +852,21 @@
       // Check if safe zone should be destroyed
       if (gameState.monsterCount > 10) {
         gameState.safeZoneDestroyed = true;
+      }
+
+      // Coin pickups - magnet toward player when close, collect on contact
+      for (let i = coinDrops.length - 1; i >= 0; i--) {
+        const c = coinDrops[i];
+        const d = Math.hypot(player.x - c.x, player.y - c.y);
+        if (d < 140) {
+          const ang = Math.atan2(player.y - c.y, player.x - c.x);
+          c.x += Math.cos(ang) * 420 * deltaTime;
+          c.y += Math.sin(ang) * 420 * deltaTime;
+        }
+        if (d < player.size + 12) {
+          addCoins(c.value);
+          coinDrops.splice(i, 1);
+        }
       }
 
       // Monster AI - Chase directly toward player
@@ -616,6 +937,7 @@
       // Update HUD
       document.getElementById('kills').textContent = gameState.kills;
       document.getElementById('time').textContent = Math.floor(gameState.time);
+      document.getElementById('coinsHud').textContent = walletCoins;
       let monsterStatus;
       if (gameState.bossActive) {
         monsterStatus = `⚠ BOSS FIGHT - SAFE ZONE OFFLINE ⚠`;
@@ -693,7 +1015,7 @@
       ctx.save();
       ctx.translate(player.x, player.y);
       ctx.rotate(player.angle);
-      ctx.fillStyle = '#00ccff';
+      ctx.fillStyle = SKINS[currentSkin].color;
       ctx.fillRect(-player.size, -player.size, player.size * 2, player.size * 2);
       ctx.fillStyle = WEAPONS[gameState.currentWeapon].color;
       ctx.fillRect(player.size / 2, -6, 12, 12);
@@ -705,6 +1027,18 @@
         ctx.beginPath();
         ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      // Coin drops
+      for (const c of coinDrops) {
+        const bob = Math.sin(performance.now() / 300 + c.phase) * 3;
+        ctx.fillStyle = '#ffd23c';
+        ctx.beginPath();
+        ctx.arc(c.x, c.y + bob, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#a8790a';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
       }
 
       // Draw all monsters
@@ -913,7 +1247,7 @@
       // Minimap elements
       ctx.fillStyle = gameState.safeZoneDestroyed ? '#ff0000' : '#00ff00';
       ctx.fillRect(miniX + base.x * mapScale, miniY + base.y * mapScale, base.w * mapScale, base.h * mapScale);
-      ctx.fillStyle = '#00ccff';
+      ctx.fillStyle = SKINS[currentSkin].color;
       ctx.fillRect(miniX + player.x * mapScale, miniY + player.y * mapScale, 3, 3);
       ctx.fillStyle = '#ff0000';
       for (const monster of monsters) {
