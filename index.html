@@ -949,6 +949,41 @@
         @keyframes sr-road {
             to { transform: translateX(-90px); }
         }
+
+        /* Flying Mercedes-Benz logos */
+        .fly-logos {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .fly-logos img {
+            position: absolute;
+            left: var(--x);
+            bottom: -140px;
+            width: var(--s);
+            height: var(--s);
+            opacity: 0;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+            animation: fly-up var(--d) linear var(--delay) infinite;
+        }
+
+        @keyframes fly-up {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            50% { transform: translate(var(--dx), -55vh) rotate(180deg); }
+            90% { opacity: 0.8; }
+            100% { transform: translate(calc(var(--dx) * -1), -120vh) rotate(360deg); opacity: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fly-logos {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1849,5 +1884,18 @@
             render();
         })();
     </script>
+    <!-- Flying Mercedes-Benz logos -->
+    <div class="fly-logos" aria-hidden="true">
+        <img src="mercedes logo.jpg" alt="" style="--x:4%; --s:70px; --d:16s; --delay:0s; --dx:60px">
+        <img src="mercedes logo.jpg" alt="" style="--x:14%; --s:44px; --d:22s; --delay:3s; --dx:-80px">
+        <img src="mercedes logo.jpg" alt="" style="--x:24%; --s:90px; --d:20s; --delay:7s; --dx:40px">
+        <img src="mercedes logo.jpg" alt="" style="--x:35%; --s:52px; --d:14s; --delay:1s; --dx:-50px">
+        <img src="mercedes logo.jpg" alt="" style="--x:46%; --s:64px; --d:24s; --delay:10s; --dx:90px">
+        <img src="mercedes logo.jpg" alt="" style="--x:57%; --s:40px; --d:18s; --delay:5s; --dx:-60px">
+        <img src="mercedes logo.jpg" alt="" style="--x:67%; --s:84px; --d:21s; --delay:12s; --dx:50px">
+        <img src="mercedes logo.jpg" alt="" style="--x:78%; --s:48px; --d:15s; --delay:2s; --dx:-90px">
+        <img src="mercedes logo.jpg" alt="" style="--x:88%; --s:72px; --d:19s; --delay:8s; --dx:-40px">
+        <img src="mercedes logo.jpg" alt="" style="--x:95%; --s:38px; --d:17s; --delay:14s; --dx:70px">
+    </div>
 </body>
 </html>
