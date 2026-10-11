@@ -8,35 +8,35 @@
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Libre+Baskerville:wght@400;700&display=swap');
 
         :root {
-            --bg: #7A1F1F;
-            --bg-dark: #4A1212;
-            --panel: #A32B2B;
-            --moss: #E57373;
-            --card: #F8ECEC;
+            --bg: #0A0A0A;
+            --bg-dark: #000000;
+            --panel: #9A7410;
+            --moss: #D4AF37;
+            --card: #FBF4DC;
             --ink: #14291D;
             --text: #1B2A21;
-            --surface: #A32B2B;
+            --surface: #1C1C1C;
             --frame: #FFFFFF;
             --on-dark: #EEF4EC;
-            --footer: #4A1212;
-            --btn-bg: #4A1212;
+            --footer: #000000;
+            --btn-bg: #000000;
             --btn-text: #EEF4EC;
-            --btn-hover-bg: #C23B3B;
+            --btn-hover-bg: #A67C00;
             --btn-hover-text: #FFFFFF;
         }
 
         :root[data-theme="dark"] {
-            --bg: #1A0808;
-            --surface: #3A1414;
-            --panel: #E57373;
-            --card: #2B1515;
-            --frame: #3A2020;
+            --bg: #000000;
+            --surface: #121212;
+            --panel: #D4AF37;
+            --card: #1A1A1A;
+            --frame: #262626;
             --ink: #EEF4EC;
             --text: #D5E3D9;
-            --footer: #0E0404;
-            --btn-bg: #E57373;
+            --footer: #000000;
+            --btn-bg: #D4AF37;
             --btn-text: #0E1A13;
-            --btn-hover-bg: #F29A9A;
+            --btn-hover-bg: #E8C75A;
             --btn-hover-text: #0E1A13;
         }
 
@@ -85,7 +85,7 @@
             top: 0;
             z-index: 100;
             border-bottom: 3px solid var(--moss);
-            box-shadow: 0 8px 22px rgba(30, 8, 8, 0.45);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
         }
 
         .header-container {
@@ -139,7 +139,7 @@
             background: var(--card);
             padding: 70px 50px;
             border-radius: 0;
-            box-shadow: 0 10px 30px rgba(30, 8, 8, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             text-align: left;
             margin-bottom: 60px;
             border-left: 10px solid var(--moss);
@@ -194,7 +194,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(30, 8, 8, 0.6);
+            background: rgba(0, 0, 0, 0.6);
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s, visibility 0.3s;
@@ -212,7 +212,7 @@
             background: var(--card);
             border-left: 10px solid var(--moss);
             padding: 40px 36px 32px;
-            box-shadow: 0 20px 50px rgba(30, 8, 8, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             font-size: 1.15em;
             font-weight: bold;
             color: var(--panel);
@@ -253,7 +253,7 @@
             background: var(--card);
             padding: 48px;
             border-radius: 0;
-            box-shadow: 0 8px 22px rgba(30, 8, 8, 0.35);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
             margin-bottom: 48px;
             border-left: 10px solid var(--moss);
         }
@@ -331,13 +331,13 @@
             margin-bottom: 24px;
             background: var(--frame);
             padding: 10px 10px 0;
-            box-shadow: 0 8px 22px rgba(30, 8, 8, 0.25);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .g-item:hover {
             transform: translateY(-4px);
-            box-shadow: 0 14px 30px rgba(30, 8, 8, 0.35);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
         }
 
         .g-photo {
@@ -452,7 +452,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(30, 8, 8, 0.75);
+            background: rgba(0, 0, 0, 0.75);
         }
 
         .overlay.open {
@@ -467,7 +467,7 @@
             background: var(--card);
             border-left: 10px solid var(--moss);
             padding: 32px;
-            box-shadow: 0 20px 50px rgba(30, 8, 8, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         .editor h3 {
@@ -632,6 +632,197 @@
             }
         }
         .brand-logo { width: 110px; height: 110px; display: block; margin: 0 0 16px; }
+
+        /* G63 designer game */
+        .g63-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+            gap: 30px;
+            align-items: start;
+        }
+
+        .g63-view svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 4px solid var(--frame);
+            box-shadow: 0 10px 30px rgba(30, 8, 8, 0.4);
+        }
+
+        .g63-view.rev svg .g63-car {
+            animation: g63-shake 0.07s linear infinite;
+        }
+
+        @keyframes g63-shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(1.2px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(1px, 1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .g63-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 18px 0;
+        }
+
+        .g63-actions button {
+            padding: 10px 18px;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+        }
+
+        .g63-name {
+            display: block;
+            font-family: 'Oswald', Impact, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85em;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .g63-name input {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px 12px;
+            font: inherit;
+            font-size: 1.1em;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--text);
+            background: var(--frame);
+            border: 1px solid var(--moss);
+        }
+
+        .g63-price,
+        .g63-rating,
+        .g63-readout {
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .g63-price strong,
+        .g63-rating strong {
+            color: var(--ink);
+            font-family: 'Oswald', Impact, sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .g63-readout {
+            font-size: 0.95em;
+            margin-bottom: 14px;
+        }
+
+        .g63-bar {
+            display: grid;
+            grid-template-columns: 80px 1fr 34px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-family: 'Oswald', Impact, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85em;
+            color: var(--ink);
+        }
+
+        .g63-track {
+            height: 12px;
+            background: var(--frame);
+            border: 1px solid var(--moss);
+        }
+
+        .g63-fill {
+            height: 100%;
+            background: var(--panel);
+            transition: width 0.4s;
+        }
+
+        .g63-group {
+            margin-bottom: 20px;
+        }
+
+        .g63-group h3 {
+            font-family: 'Oswald', Impact, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.95em;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .g63-opts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .g63 .g63-opt {
+            padding: 8px 12px;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            background: var(--frame);
+            color: var(--text);
+            border: 2px solid var(--moss);
+        }
+
+        .g63 .g63-opt:hover {
+            background: var(--frame);
+            color: var(--text);
+            border-color: var(--ink);
+        }
+
+        .g63 .g63-opt.on {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border-color: var(--btn-bg);
+        }
+
+        .g63 .g63-sw {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            background: var(--c);
+            border: 3px solid var(--frame);
+            box-shadow: 0 0 0 1px var(--moss);
+        }
+
+        .g63 .g63-sw:hover {
+            background: var(--c);
+        }
+
+        .g63 .g63-sw.on {
+            box-shadow: 0 0 0 3px var(--ink);
+        }
+
+        .g63 input[type="color"] {
+            width: 38px;
+            height: 34px;
+            padding: 0;
+            border: 2px solid var(--moss);
+            background: var(--frame);
+            cursor: pointer;
+        }
+
+        .g63-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text);
+            font-size: 0.95em;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .g63-layout {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -646,6 +837,7 @@
                     <li><a href="#hobbies">Hobbies</a></li>
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="#garage">G63 Garage</a></li>
                 </ul>
             </nav>
             <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">Dark mode</button>
@@ -698,6 +890,33 @@
         <section class="section" id="contact">
             <h2>Contact</h2>
             <p>Feel free to reach out to me if you'd like to chat about coding, education, or share recommendations for great series and movies! You can contact me through KIBERone or via email. I'm always happy to discuss teaching strategies, programming challenges, or just have a friendly conversation about your favorite shows.</p>
+        </section>
+
+        <!-- G63 Designer Game -->
+        <section class="section g63" id="garage">
+            <h2>G63 AMG Garage</h2>
+            <p>Design your dream Mercedes-AMG G 63. Pick the paint, wheels, style and engine, then watch your build score grow.</p>
+            <div class="g63-layout">
+                <div class="g63-stage">
+                    <div class="g63-view" id="g63View"></div>
+                    <div class="g63-actions">
+                        <button type="button" id="g63Rev">Rev engine</button>
+                        <button type="button" class="btn-ghost" id="g63Random">Randomize</button>
+                        <button type="button" class="btn-ghost" id="g63Reset">Reset</button>
+                        <button type="button" class="btn-ghost" id="g63Download">Download PNG</button>
+                    </div>
+                    <div class="g63-stats">
+                        <label class="g63-name">Build name
+                            <input type="text" id="g63Name" maxlength="28" placeholder="My G63">
+                        </label>
+                        <div class="g63-price">Build cost: <strong id="g63Price"></strong></div>
+                        <div class="g63-rating">Build rating: <strong id="g63Rating"></strong></div>
+                        <div class="g63-readout" id="g63Readout"></div>
+                        <div class="g63-bars" id="g63Bars"></div>
+                    </div>
+                </div>
+                <div class="g63-controls" id="g63Controls"></div>
+            </div>
         </section>
     </main>
 
@@ -964,6 +1183,381 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') hideMessage();
         });
+
+        // ===== G63 AMG designer game =====
+        (function () {
+            const PAINTS = [
+                { id: 'black', name: 'Obsidian Black', color: '#0d0d10', price: 2500 },
+                { id: 'white', name: 'Diamond White', color: '#f1f1ee', price: 3000 },
+                { id: 'grey', name: 'Magno Night Grey', color: '#50555c', price: 4500 },
+                { id: 'red', name: 'Signal Red', color: '#c1121f', price: 3000 },
+                { id: 'olive', name: 'Olive Green', color: '#5a6b3a', price: 3500 },
+                { id: 'orange', name: 'Sunset Orange', color: '#e8601c', price: 3500 },
+                { id: 'purple', name: 'Designo Purple', color: '#5b2a86', price: 6000 },
+                { id: 'blue', name: 'Electric Blue', color: '#1769e0', price: 4000 }
+            ];
+            const FINISHES = [
+                { id: 'gloss', name: 'Gloss', price: 0, style: 4, lux: 4 },
+                { id: 'metallic', name: 'Metallic', price: 2000, style: 8, lux: 10 },
+                { id: 'matte', name: 'Matte', price: 8000, style: 14, lux: 6 }
+            ];
+            const TRIMS = [
+                { id: 'chrome', name: 'Chrome', color: '#c9ccd1', price: 0, style: 2, lux: 8 },
+                { id: 'night', name: 'Night package', color: '#111114', price: 3500, style: 10, lux: 4 },
+                { id: 'gold', name: 'Gold', color: '#d4a82a', price: 7000, style: 14, lux: 15 }
+            ];
+            const RIM_COLORS = [
+                { id: 'silver', name: 'Silver', color: '#d0d3d8' },
+                { id: 'black', name: 'Black', color: '#17171a' },
+                { id: 'gold', name: 'Gold', color: '#d4a82a' },
+                { id: 'bronze', name: 'Bronze', color: '#a1632c' },
+                { id: 'white', name: 'White', color: '#f4f4f4' },
+                { id: 'red', name: 'Red', color: '#d11a1a' }
+            ];
+            const RIM_STYLES = [
+                { id: 'five', name: '5-spoke', price: 0, style: 4 },
+                { id: 'multi', name: 'Multi-spoke', price: 1500, style: 6 },
+                { id: 'turbine', name: 'Turbine', price: 2500, style: 9 },
+                { id: 'split', name: 'Split', price: 3000, style: 8 }
+            ];
+            const CALIPERS = [
+                { id: 'red', name: 'Red', color: '#e11d1d' },
+                { id: 'yellow', name: 'Yellow', color: '#f6c90e' },
+                { id: 'blue', name: 'Blue', color: '#1e6bff' },
+                { id: 'orange', name: 'Orange', color: '#ff7a00' },
+                { id: 'black', name: 'Black', color: '#222222' }
+            ];
+            const STRIPES = [
+                { id: 'none', name: 'None', price: 0, style: 0 },
+                { id: 'side', name: 'Side stripe', price: 800, style: 8 },
+                { id: 'double', name: 'Double stripe', price: 1200, style: 11 },
+                { id: 'fade', name: 'Fade', price: 1800, style: 13 }
+            ];
+            const STANCES = [
+                { id: 'lifted', name: 'Lifted', shift: -10, price: 4000, off: 25, style: 6, speed: -4 },
+                { id: 'stock', name: 'Stock', shift: 0, price: 0, off: 8, style: 0, speed: 0 },
+                { id: 'lowered', name: 'Lowered', shift: 9, price: 2500, off: 0, style: 12, speed: 6 }
+            ];
+            const TINTS = [
+                { id: 'light', name: 'Light', alpha: 0.5, price: 0, style: 0, lux: 0 },
+                { id: 'dark', name: 'Dark', alpha: 0.8, price: 400, style: 8, lux: 4 },
+                { id: 'blackout', name: 'Blackout', alpha: 0.96, price: 900, style: 12, lux: 6 }
+            ];
+            const ENGINES = [
+                { id: 'stock', name: 'Stock 4.0 V8 Biturbo', hp: 585, sec: 4.5, mph: 137, power: 60, speed: 58, price: 0 },
+                { id: 'stage1', name: 'Stage 1 tune', hp: 650, sec: 4.2, mph: 149, power: 72, speed: 70, price: 6000 },
+                { id: 'stage2', name: 'Stage 2 tune', hp: 750, sec: 3.8, mph: 162, power: 88, speed: 84, price: 14000 },
+                { id: 'brabus', name: 'Brabus 800', hp: 800, sec: 3.5, mph: 168, power: 100, speed: 92, price: 28000 }
+            ];
+            const SCENES = [
+                { id: 'day', name: 'Day' },
+                { id: 'sunset', name: 'Sunset' },
+                { id: 'night', name: 'Night' },
+                { id: 'studio', name: 'Studio' }
+            ];
+            const EXTRAS = [
+                { id: 'rack', name: 'Roof rack', price: 1200, off: 8, style: 4 },
+                { id: 'lightbar', name: 'LED light bar', price: 900, off: 10, style: 6 },
+                { id: 'spare', name: 'Rear spare wheel', price: 500, off: 7, style: 2 },
+                { id: 'underglow', name: 'Underglow', price: 700, off: 0, style: 12 }
+            ];
+
+            const DEFAULTS = {
+                name: 'My G63',
+                paint: 'black', customPaint: '#ff2d95',
+                finish: 'gloss', trim: 'chrome',
+                rimStyle: 'five', rimColor: 'silver', caliper: 'red',
+                stripe: 'none', stripeColor: '#ffffff',
+                stance: 'stock', tint: 'dark', engine: 'stock', scene: 'day',
+                rack: false, lightbar: false, spare: true, underglow: false
+            };
+            const KEY = 'g63design';
+
+            const view = document.getElementById('g63View');
+            const controls = document.getElementById('g63Controls');
+            if (!view || !controls) return;
+
+            let state = Object.assign({}, DEFAULTS);
+            try {
+                const saved = JSON.parse(localStorage.getItem(KEY));
+                if (saved && typeof saved === 'object') state = Object.assign(state, saved);
+            } catch (e) { /* storage unavailable */ }
+
+            const find = (list, id) => list.find(i => i.id === id) || list[0];
+            const paintColor = () => state.paint === 'custom' ? state.customPaint : find(PAINTS, state.paint).color;
+
+            // ---------- drawing ----------
+            function rim(cx, cy, c) {
+                const rc = find(RIM_COLORS, state.rimColor).color;
+                const cal = find(CALIPERS, state.caliper).color;
+                let s = '<circle cx="' + cx + '" cy="' + cy + '" r="36" fill="#0e0e10"/>' +
+                    '<circle cx="' + cx + '" cy="' + cy + '" r="31" fill="none" stroke="#232326" stroke-width="2"/>' +
+                    '<rect x="' + (cx + 6) + '" y="' + (cy - 20) + '" width="15" height="24" rx="4" fill="' + cal + '"/>' +
+                    '<circle cx="' + cx + '" cy="' + cy + '" r="25" fill="#1b1b1e"/>';
+                const spoke = (angle, x, w, y0, y1) =>
+                    '<rect x="' + (cx - w / 2) + '" y="' + (cy - y1) + '" width="' + w + '" height="' + (y1 - y0) +
+                    '" fill="' + rc + '" transform="rotate(' + angle + ' ' + cx + ' ' + cy + ')"/>';
+                if (state.rimStyle === 'five') {
+                    for (let i = 0; i < 5; i++) s += spoke(i * 72, 0, 8, 4, 23);
+                } else if (state.rimStyle === 'multi') {
+                    for (let i = 0; i < 14; i++) s += spoke(i * (360 / 14), 0, 2.6, 5, 23);
+                } else if (state.rimStyle === 'turbine') {
+                    for (let i = 0; i < 8; i++) {
+                        s += '<path d="M' + cx + ' ' + (cy - 4) + ' Q' + (cx + 12) + ' ' + (cy - 12) + ' ' + (cx + 5) + ' ' + (cy - 23) +
+                            '" fill="none" stroke="' + rc + '" stroke-width="4" transform="rotate(' + (i * 45) + ' ' + cx + ' ' + cy + ')"/>';
+                    }
+                } else {
+                    for (let i = 0; i < 10; i++) {
+                        s += spoke(i * 36 - 6, 0, 3, 6, 23) + spoke(i * 36 + 6, 0, 3, 6, 23);
+                    }
+                }
+                s += '<circle cx="' + cx + '" cy="' + cy + '" r="25" fill="none" stroke="' + rc + '" stroke-width="3"/>' +
+                    '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + rc + '" stroke="#111" stroke-width="1"/>';
+                return s;
+            }
+
+            function scene() {
+                if (state.scene === 'sunset') {
+                    return '<rect width="640" height="232" fill="url(#skySunset)"/>' +
+                        '<circle cx="110" cy="190" r="46" fill="#ffd56b" opacity="0.95"/>' +
+                        '<rect y="232" width="640" height="68" fill="#2b2430"/>';
+                }
+                if (state.scene === 'night') {
+                    let stars = '';
+                    for (let i = 0; i < 40; i++) {
+                        stars += '<circle cx="' + ((i * 97) % 640) + '" cy="' + ((i * 53) % 190) + '" r="' + (i % 3 ? 1 : 1.6) + '" fill="#fff" opacity="0.8"/>';
+                    }
+                    return '<rect width="640" height="232" fill="url(#skyNight)"/>' + stars +
+                        '<circle cx="540" cy="48" r="20" fill="#f4f1d8"/><circle cx="549" cy="42" r="18" fill="#0a1030"/>' +
+                        '<rect y="232" width="640" height="68" fill="#16161b"/>';
+                }
+                if (state.scene === 'studio') {
+                    return '<rect width="640" height="300" fill="url(#studio)"/>' +
+                        '<rect y="232" width="640" height="68" fill="#3a3b40"/>' +
+                        '<ellipse cx="300" cy="236" rx="300" ry="14" fill="#fff" opacity="0.09"/>';
+                }
+                return '<rect width="640" height="232" fill="url(#skyDay)"/>' +
+                    '<ellipse cx="120" cy="60" rx="46" ry="14" fill="#fff" opacity="0.85"/><ellipse cx="150" cy="52" rx="30" ry="12" fill="#fff" opacity="0.85"/>' +
+                    '<ellipse cx="470" cy="90" rx="50" ry="13" fill="#fff" opacity="0.8"/>' +
+                    '<rect y="232" width="640" height="68" fill="#3c3d42"/>';
+            }
+
+            function buildSVG() {
+                const paint = paintColor();
+                const trim = find(TRIMS, state.trim).color;
+                const stance = find(STANCES, state.stance);
+                const d = stance.shift;
+                const tint = find(TINTS, state.tint).alpha;
+                const bodyPath = 'M45 200 L45 112 Q45 104 55 102 L95 96 L110 62 L390 62 L420 104 L548 110 Q560 112 560 125 L560 200 Z';
+                const overlay = state.finish === 'matte' ? '' :
+                    '<path d="' + bodyPath + '" fill="url(#' + (state.finish === 'metallic' ? 'metal' : 'gloss') + ')"/>';
+                let stripe = '';
+                if (state.stripe === 'side') stripe = '<rect x="40" y="148" width="530" height="9" fill="' + state.stripeColor + '"/>';
+                if (state.stripe === 'double') stripe = '<rect x="40" y="144" width="530" height="4" fill="' + state.stripeColor + '"/><rect x="40" y="152" width="530" height="4" fill="' + state.stripeColor + '"/>';
+                if (state.stripe === 'fade') stripe = '<rect x="40" y="128" width="530" height="56" fill="url(#fade)"/>';
+
+                const wheelsX = [150, 455];
+                const wy = 196;
+                const night = state.scene === 'night';
+                const headlight = '<circle cx="540" cy="126" r="9" fill="' + (night ? '#fffbd0' : '#f4f1dc') + '" stroke="' + trim + '" stroke-width="3"/>' +
+                    '<circle cx="540" cy="146" r="3.5" fill="#ff9d1f"/>';
+                const beam = night ? '<polygon points="548,126 640,80 640,200" fill="url(#beam)"/>' : '';
+                const glow = state.underglow ?
+                    '<ellipse cx="300" cy="236" rx="285" ry="12" fill="' + paintGlow() + '" filter="url(#blur)"/>' : '';
+
+                let body = '<g transform="translate(0 ' + d + ')">' +
+                    '<clipPath id="bodyClip"><path d="' + bodyPath + '"/></clipPath>' +
+                    (state.spare ? '<rect x="27" y="112" width="19" height="84" rx="9" fill="#18181b"/><rect x="27" y="112" width="19" height="84" rx="9" fill="none" stroke="' + trim + '" stroke-width="1.5" opacity="0.6"/>' : '') +
+                    '<path d="' + bodyPath + '" fill="' + paint + '"/>' +
+                    '<g clip-path="url(#bodyClip)">' + stripe + '</g>' + overlay +
+                    // windows
+                    '<path d="M118 70 L386 70 L410 102 L118 102 Z" fill="rgb(14,22,30)" fill-opacity="' + tint + '" stroke="' + trim + '" stroke-width="2.5"/>' +
+                    '<path d="M130 72 L180 72 L150 100 L130 100 Z" fill="#fff" opacity="0.12"/>' +
+                    '<rect x="248" y="70" width="10" height="32" fill="' + paint + '"/><rect x="334" y="70" width="10" height="32" fill="' + paint + '"/>' +
+                    // door lines + handles
+                    '<g stroke="rgba(0,0,0,0.5)" stroke-width="1.5"><line x1="253" y1="102" x2="253" y2="194"/><line x1="339" y1="102" x2="339" y2="194"/><line x1="118" y1="102" x2="118" y2="194"/></g>' +
+                    '<rect x="222" y="112" width="22" height="5" rx="2" fill="' + trim + '"/><rect x="308" y="112" width="22" height="5" rx="2" fill="' + trim + '"/>' +
+                    // arches
+                    '<g clip-path="url(#bodyClip)">' + wheelsX.map(x =>
+                        '<circle cx="' + x + '" cy="' + (wy - d) + '" r="45" fill="#0a0a0c"/><circle cx="' + x + '" cy="' + (wy - d) + '" r="47" fill="none" stroke="' + trim + '" stroke-width="5" opacity="0.9"/>').join('') + '</g>' +
+                    // bumpers, grille, lights
+                    '<rect x="40" y="188" width="525" height="12" rx="3" fill="' + trim + '"/>' +
+                    '<rect x="548" y="136" width="12" height="38" fill="#101012"/><g stroke="' + trim + '" stroke-width="1.5"><line x1="548" y1="146" x2="560" y2="146"/><line x1="548" y1="155" x2="560" y2="155"/><line x1="548" y1="164" x2="560" y2="164"/></g>' +
+                    headlight + '<rect x="45" y="122" width="6" height="24" fill="#ff2323"/>' +
+                    '<rect x="402" y="98" width="13" height="17" rx="3" fill="' + paint + '" stroke="' + trim + '" stroke-width="2"/>' +
+                    '<text x="296" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="11" fill="' + trim + '" letter-spacing="2">AMG</text>' +
+                    // roof gear
+                    (state.rack ? '<rect x="128" y="55" width="252" height="4" fill="' + trim + '"/><rect x="150" y="57" width="5" height="7" fill="' + trim + '"/><rect x="250" y="57" width="5" height="7" fill="' + trim + '"/><rect x="350" y="57" width="5" height="7" fill="' + trim + '"/>' : '') +
+                    (state.lightbar ? '<rect x="312" y="' + (state.rack ? 46 : 55) + '" width="64" height="7" rx="3" fill="#fffbe0"/><rect x="306" y="' + (state.rack ? 42 : 51) + '" width="76" height="15" rx="6" fill="#fff6b0" opacity="0.25"/>' : '') +
+                    '</g>';
+
+                const wheels = wheelsX.map(x => rim(x, wy)).join('');
+                return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-label="Your custom G63 AMG">' +
+                    '<defs>' +
+                    '<linearGradient id="skyDay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4aa3e8"/><stop offset="1" stop-color="#cfe9fb"/></linearGradient>' +
+                    '<linearGradient id="skySunset" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b2a6e"/><stop offset="0.55" stop-color="#e2574c"/><stop offset="1" stop-color="#ffc067"/></linearGradient>' +
+                    '<linearGradient id="skyNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04061a"/><stop offset="1" stop-color="#1a2150"/></linearGradient>' +
+                    '<radialGradient id="studio" cx="0.5" cy="0.45" r="0.75"><stop offset="0" stop-color="#8a8c94"/><stop offset="1" stop-color="#1d1e22"/></radialGradient>' +
+                    '<linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.45"/><stop offset="0.35" stop-color="#fff" stop-opacity="0.05"/><stop offset="1" stop-color="#000" stop-opacity="0.35"/></linearGradient>' +
+                    '<linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.4"/><stop offset="0.5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.3"/></linearGradient>' +
+                    '<linearGradient id="fade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + state.stripeColor + '"/><stop offset="1" stop-color="' + state.stripeColor + '" stop-opacity="0"/></linearGradient>' +
+                    '<linearGradient id="beam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6b0" stop-opacity="0.55"/><stop offset="1" stop-color="#fff6b0" stop-opacity="0"/></linearGradient>' +
+                    '<filter id="blur"><feGaussianBlur stdDeviation="6"/></filter>' +
+                    '</defs>' +
+                    scene() + glow +
+                    '<ellipse cx="305" cy="234" rx="270" ry="7" fill="#000" opacity="0.4"/>' +
+                    '<g class="g63-car">' + beam + wheels + body + '</g>' +
+                    '</svg>';
+            }
+
+            function paintGlow() {
+                return state.paint === 'custom' ? state.customPaint : '#31e3ff';
+            }
+
+            // ---------- stats ----------
+            function compute() {
+                const eng = find(ENGINES, state.engine), stance = find(STANCES, state.stance);
+                const fin = find(FINISHES, state.finish), trim = find(TRIMS, state.trim);
+                const tint = find(TINTS, state.tint), rs = find(RIM_STYLES, state.rimStyle), str = find(STRIPES, state.stripe);
+                const paint = state.paint === 'custom' ? { price: 5000 } : find(PAINTS, state.paint);
+                let price = 180000 + paint.price + fin.price + trim.price + tint.price + rs.price + str.price + stance.price + eng.price;
+                let style = 25 + fin.style + trim.style + rs.style + str.style + stance.style + tint.style + (state.paint === 'custom' ? 8 : 0);
+                let lux = 30 + Math.min(paint.price / 150, 40) + fin.lux + trim.lux + tint.lux;
+                let off = 30 + stance.off;
+                EXTRAS.forEach(e => {
+                    if (!state[e.id]) return;
+                    price += e.price; style += e.style; off += e.off;
+                });
+                const speed = eng.speed + stance.speed;
+                const cap = n => Math.max(0, Math.min(100, Math.round(n)));
+                const bars = { Power: cap(eng.power), Speed: cap(speed), Style: cap(style), Luxury: cap(lux), 'Off-road': cap(off) };
+                const avg = Object.values(bars).reduce((a, b) => a + b, 0) / 5;
+                const rating = avg >= 85 ? 'Legendary' : avg >= 70 ? 'Epic' : avg >= 55 ? 'Great' : avg >= 40 ? 'Good' : 'Starter';
+                return { eng, price, bars, rating };
+            }
+
+            function render() {
+                view.innerHTML = buildSVG();
+                const c = compute();
+                document.getElementById('g63Price').textContent = '$' + c.price.toLocaleString('en-US');
+                document.getElementById('g63Rating').textContent = c.rating;
+                document.getElementById('g63Readout').textContent =
+                    c.eng.hp + ' hp  ·  0-60 mph in ' + c.eng.sec + ' s  ·  top speed ' + c.eng.mph + ' mph';
+                document.getElementById('g63Bars').innerHTML = Object.keys(c.bars).map(k =>
+                    '<div class="g63-bar"><span>' + k + '</span><div class="g63-track"><div class="g63-fill" style="width:' + c.bars[k] + '%"></div></div><span>' + c.bars[k] + '</span></div>').join('');
+                controls.querySelectorAll('[data-key]').forEach(el => {
+                    el.classList.toggle('on', String(state[el.dataset.key]) === el.dataset.id);
+                });
+                try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+            }
+
+            // ---------- controls ----------
+            function group(title, html) {
+                return '<div class="g63-group"><h3>' + title + '</h3><div class="g63-opts">' + html + '</div></div>';
+            }
+            function opts(key, list) {
+                return list.map(i => '<button type="button" class="g63-opt" data-key="' + key + '" data-id="' + i.id + '">' + i.name +
+                    (i.price ? ' +$' + i.price.toLocaleString('en-US') : '') + '</button>').join('');
+            }
+            function swatches(key, list) {
+                return list.map(i => '<button type="button" class="g63-sw" style="--c:' + i.color + '" title="' + i.name +
+                    '" aria-label="' + i.name + '" data-key="' + key + '" data-id="' + i.id + '"></button>').join('');
+            }
+
+            controls.innerHTML =
+                group('Paint', swatches('paint', PAINTS) +
+                    '<input type="color" id="g63Custom" title="Custom color (+$5,000)" aria-label="Custom paint color" value="' + state.customPaint + '">') +
+                group('Finish', opts('finish', FINISHES)) +
+                group('Trim', opts('trim', TRIMS)) +
+                group('Wheel style', opts('rimStyle', RIM_STYLES)) +
+                group('Wheel color', swatches('rimColor', RIM_COLORS)) +
+                group('Brake calipers', swatches('caliper', CALIPERS)) +
+                group('Stripes', opts('stripe', STRIPES) + '<input type="color" id="g63StripeColor" title="Stripe color" aria-label="Stripe color" value="' + state.stripeColor + '">') +
+                group('Stance', opts('stance', STANCES)) +
+                group('Window tint', opts('tint', TINTS)) +
+                group('Engine', opts('engine', ENGINES.map(e => ({ id: e.id, name: e.name + ' (' + e.hp + ' hp)', price: e.price })))) +
+                group('Extras', EXTRAS.map(e => '<label class="g63-check"><input type="checkbox" data-extra="' + e.id + '"> ' + e.name + ' (+$' + e.price.toLocaleString('en-US') + ')</label>').join('')) +
+                group('Scene', opts('scene', SCENES));
+
+            controls.addEventListener('click', e => {
+                const b = e.target.closest('[data-key]');
+                if (!b) return;
+                state[b.dataset.key] = b.dataset.id;
+                render();
+            });
+            controls.querySelectorAll('[data-extra]').forEach(cb => {
+                cb.checked = !!state[cb.dataset.extra];
+                cb.addEventListener('change', () => { state[cb.dataset.extra] = cb.checked; render(); });
+            });
+            document.getElementById('g63Custom').addEventListener('input', e => {
+                state.customPaint = e.target.value; state.paint = 'custom'; render();
+            });
+            document.getElementById('g63StripeColor').addEventListener('input', e => {
+                state.stripeColor = e.target.value; if (state.stripe === 'none') state.stripe = 'side'; render();
+            });
+            const nameInput = document.getElementById('g63Name');
+            nameInput.value = state.name;
+            nameInput.addEventListener('input', () => { state.name = nameInput.value; try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } });
+
+            // ---------- actions ----------
+            const pick = list => list[Math.floor(Math.random() * list.length)].id;
+            const syncExtras = () => controls.querySelectorAll('[data-extra]').forEach(cb => { cb.checked = !!state[cb.dataset.extra]; });
+
+            document.getElementById('g63Random').addEventListener('click', () => {
+                state.paint = pick(PAINTS); state.finish = pick(FINISHES); state.trim = pick(TRIMS);
+                state.rimStyle = pick(RIM_STYLES); state.rimColor = pick(RIM_COLORS); state.caliper = pick(CALIPERS);
+                state.stripe = pick(STRIPES); state.stripeColor = '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
+                state.stance = pick(STANCES); state.tint = pick(TINTS); state.engine = pick(ENGINES); state.scene = pick(SCENES);
+                EXTRAS.forEach(x => { state[x.id] = Math.random() < 0.5; });
+                syncExtras(); render();
+            });
+            document.getElementById('g63Reset').addEventListener('click', () => {
+                state = Object.assign({}, DEFAULTS);
+                nameInput.value = state.name;
+                syncExtras(); render();
+            });
+
+            let audio;
+            document.getElementById('g63Rev').addEventListener('click', () => {
+                view.classList.add('rev');
+                setTimeout(() => view.classList.remove('rev'), 1300);
+                try {
+                    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+                    const eng = find(ENGINES, state.engine);
+                    const t = audio.currentTime, o = audio.createOscillator(), o2 = audio.createOscillator();
+                    const g = audio.createGain(), f = audio.createBiquadFilter();
+                    o.type = 'sawtooth'; o2.type = 'square';
+                    const top = 110 + eng.power;
+                    o.frequency.setValueAtTime(40, t); o.frequency.exponentialRampToValueAtTime(top, t + 0.7); o.frequency.exponentialRampToValueAtTime(45, t + 1.3);
+                    o2.frequency.setValueAtTime(20, t); o2.frequency.exponentialRampToValueAtTime(top / 2, t + 0.7); o2.frequency.exponentialRampToValueAtTime(22, t + 1.3);
+                    f.type = 'lowpass'; f.frequency.value = 500;
+                    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.25, t + 0.15); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.3);
+                    o.connect(f); o2.connect(f); f.connect(g); g.connect(audio.destination);
+                    o.start(t); o2.start(t); o.stop(t + 1.35); o2.stop(t + 1.35);
+                } catch (e) { /* sound unavailable */ }
+            });
+
+            document.getElementById('g63Download').addEventListener('click', () => {
+                const svg = view.querySelector('svg');
+                const url = URL.createObjectURL(new Blob([svg.outerHTML], { type: 'image/svg+xml' }));
+                const img = new Image();
+                img.onload = () => {
+                    const cv = document.createElement('canvas');
+                    cv.width = 1280; cv.height = 600;
+                    cv.getContext('2d').drawImage(img, 0, 0, 1280, 600);
+                    URL.revokeObjectURL(url);
+                    cv.toBlob(png => {
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(png);
+                        a.download = (state.name || 'my-g63').replace(/[^\w-]+/g, '-') + '.png';
+                        a.click();
+                    });
+                };
+                img.src = url;
+            });
+
+            render();
+        })();
     </script>
 </body>
 </html>
