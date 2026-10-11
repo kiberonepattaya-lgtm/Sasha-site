@@ -823,6 +823,132 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Luxury black & gold finish */
+        :root {
+            --gold-grad: linear-gradient(135deg, #8a6a12 0%, #f3d77a 28%, #d4af37 50%, #f3d77a 72%, #8a6a12 100%);
+            --gold-line: linear-gradient(180deg, #8a6a12, #f3d77a 50%, #8a6a12);
+        }
+
+        body {
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.2), transparent 60%),
+                var(--bg);
+            background-attachment: fixed;
+        }
+
+        header {
+            border-bottom: 3px solid;
+            border-image: var(--gold-grad) 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        main {
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 0 0 4px #000, 0 0 0 5px rgba(212, 175, 55, 0.6), 0 24px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero,
+        .section,
+        .popup,
+        .editor {
+            border-left: 10px solid;
+            border-image: var(--gold-line) 1;
+            box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.5), 0 14px 34px rgba(0, 0, 0, 0.55);
+        }
+
+        .hero h2::after,
+        .section h2::after {
+            content: '';
+            display: block;
+            width: 90px;
+            height: 3px;
+            margin-top: 14px;
+            background: var(--gold-grad);
+        }
+
+        button {
+            border: 1px solid #d4af37;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+        }
+
+        button:hover {
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.65);
+        }
+
+        :root[data-theme="dark"] button:not(.g63-opt):not(.g63-sw) {
+            background-image: var(--gold-grad);
+        }
+
+        :root[data-theme="dark"] button:not(.g63-opt):not(.g63-sw):hover {
+            background-image: none;
+        }
+
+        .g-item {
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+        }
+
+        .g63-view svg {
+            border: 3px solid;
+            border-image: var(--gold-grad) 1;
+        }
+
+        footer {
+            border-top: 3px solid;
+            border-image: var(--gold-grad) 1;
+        }
+
+        ::selection {
+            background: #d4af37;
+            color: #000;
+        }
+
+        /* Mercedes-Benz showroom */
+        .sr-info {
+            margin-bottom: 22px;
+        }
+
+        .sr-info h3 {
+            font-family: 'Oswald', Impact, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.5em;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .section .sr-info p {
+            font-size: 0.98em;
+            margin-bottom: 12px;
+        }
+
+        .sr-spin {
+            animation: sr-spin 0.45s linear infinite paused;
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+
+        .sr-road {
+            animation: sr-road 0.5s linear infinite paused;
+        }
+
+        .g63-view.drive .sr-spin,
+        .g63-view.drive .sr-road {
+            animation-play-state: running;
+        }
+
+        .g63-view.drive .g63-car {
+            animation: g63-shake 0.12s linear infinite;
+        }
+
+        @keyframes sr-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes sr-road {
+            to { transform: translateX(-90px); }
+        }
     </style>
 </head>
 <body>
@@ -838,6 +964,7 @@
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="#garage">G63 Garage</a></li>
+                    <li><a href="#showroom">Showroom</a></li>
                 </ul>
             </nav>
             <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">Dark mode</button>
@@ -916,6 +1043,33 @@
                     </div>
                 </div>
                 <div class="g63-controls" id="g63Controls"></div>
+            </div>
+        </section>
+
+        <!-- Mercedes-Benz Showroom -->
+        <section class="section g63" id="showroom">
+            <h2>Mercedes-Benz Showroom</h2>
+            <p>Browse the lineup and pick your favorite. Switch models, change the paint and take each one for a spin. Specs are approximate.</p>
+            <div class="g63-layout">
+                <div class="g63-stage">
+                    <div class="g63-view" id="srView"></div>
+                    <div class="g63-actions">
+                        <button type="button" id="srPrev" aria-label="Previous model">&larr; Prev</button>
+                        <button type="button" id="srNext" aria-label="Next model">Next &rarr;</button>
+                        <button type="button" class="btn-ghost" id="srDrive">Drive</button>
+                    </div>
+                </div>
+                <div class="g63-controls">
+                    <div class="g63-group"><h3>Model</h3><div class="g63-opts" id="srModels"></div></div>
+                    <div class="sr-info">
+                        <h3 id="srName"></h3>
+                        <p id="srTag"></p>
+                        <div class="g63-readout" id="srReadout"></div>
+                        <div class="g63-price">From <strong id="srPrice"></strong></div>
+                        <div class="g63-bars" id="srBars"></div>
+                    </div>
+                    <div class="g63-group"><h3>Paint</h3><div class="g63-opts" id="srPaints"></div></div>
+                </div>
             </div>
         </section>
     </main>
@@ -1555,6 +1709,142 @@
                 };
                 img.src = url;
             });
+
+            render();
+        })();
+
+        // ===== Mercedes-Benz showroom =====
+        (function () {
+            const MODELS = [
+                {
+                    id: 'g63', name: 'Mercedes-AMG G 63', tag: 'The legendary boxy icon: hand-built 4.0L twin-turbo V8, three locking differentials and pure AMG attitude.',
+                    hp: 577, sec: 4.4, mph: 149, price: 180000, bars: { Power: 85, Speed: 70, Luxury: 90, 'Off-road': 100 },
+                    path: 'M45 200 L45 112 Q45 104 55 102 L95 96 L110 62 L390 62 L420 104 L548 110 Q560 112 560 125 L560 200 Z',
+                    glass: 'M118 70 L386 70 L410 102 L118 102 Z', pil: [{ x: 248, y: 70, h: 32 }, { x: 334, y: 70, h: 32 }],
+                    doors: [118, 253, 339], dy: 102, wheels: [150, 455], head: [540, 126], tail: [45, 122, 6, 24], mirror: [402, 98], spare: true, flares: true
+                },
+                {
+                    id: 'gt', name: 'Mercedes-AMG GT 63', tag: 'A low, wide sports coupe with a long hood and a thunderous twin-turbo V8.',
+                    hp: 577, sec: 3.1, mph: 196, price: 162000, bars: { Power: 85, Speed: 100, Luxury: 75, 'Off-road': 5 },
+                    path: 'M40 200 L40 172 Q48 160 80 156 L210 142 Q256 108 306 104 L352 104 Q402 108 442 136 L540 150 Q580 156 582 178 L582 200 Z',
+                    glass: 'M240 134 Q272 112 308 110 L348 110 Q384 114 410 136 Z', pil: [{ x: 322, y: 110, h: 26 }],
+                    doors: [262, 322], dy: 136, wheels: [135, 490], head: [562, 160], tail: [40, 162, 5, 14], mirror: [404, 134], spoiler: [44, 154, 44]
+                },
+                {
+                    id: 's', name: 'Mercedes-Benz S 580', tag: 'The flagship luxury sedan: silent, smooth and packed with technology.',
+                    hp: 496, sec: 4.4, mph: 130, price: 122000, bars: { Power: 65, Speed: 50, Luxury: 100, 'Off-road': 5 },
+                    path: 'M40 200 L40 160 Q42 148 62 144 L125 138 Q172 94 232 88 L372 88 Q432 92 470 128 L548 138 Q576 146 577 172 L577 200 Z',
+                    glass: 'M152 132 Q184 98 236 94 L368 94 Q414 96 442 128 Z', pil: [{ x: 296, y: 94, h: 38 }],
+                    doors: [205, 297], dy: 130, wheels: [135, 485], head: [560, 152], tail: [40, 152, 5, 18], mirror: [434, 126]
+                },
+                {
+                    id: 'eqs', name: 'Mercedes-Benz EQS', tag: 'The all-electric flagship with a sweeping one-bow design and a full-width light signature.',
+                    hp: 516, sec: 4.1, mph: 130, price: 126000, bars: { Power: 66, Speed: 50, Luxury: 96, 'Off-road': 5 },
+                    path: 'M40 200 L40 166 Q46 150 84 146 Q196 90 322 86 Q432 86 480 126 L552 142 Q579 150 579 174 L579 200 Z',
+                    glass: 'M164 134 Q214 98 322 94 Q412 94 450 128 Z', pil: [{ x: 312, y: 94, h: 38 }],
+                    doors: [225, 312], dy: 130, wheels: [135, 488], head: [562, 150], tail: [40, 152, 4, 18], mirror: [440, 126], ev: true
+                },
+                {
+                    id: 'gle', name: 'Mercedes-AMG GLE 63 Coupe', tag: 'A muscular sport-utility coupe with room for everyone and power to spare.',
+                    hp: 603, sec: 3.8, mph: 174, price: 128000, bars: { Power: 80, Speed: 80, Luxury: 88, 'Off-road': 55 },
+                    path: 'M42 200 L42 150 Q44 136 70 130 L152 118 Q205 76 275 70 L372 70 Q432 74 468 118 L542 130 Q572 138 574 166 L574 200 Z',
+                    glass: 'M170 112 Q212 80 278 76 L368 76 Q420 80 446 112 Z', pil: [{ x: 312, y: 76, h: 36 }],
+                    doors: [230, 320], dy: 112, wheels: [145, 465], head: [556, 138], tail: [42, 134, 5, 22], mirror: [436, 110]
+                },
+                {
+                    id: 'a45', name: 'Mercedes-AMG A 45 S', tag: 'The compact hot hatch with a hand-built 2.0L turbo engine and a big rear wing.',
+                    hp: 416, sec: 3.8, mph: 167, price: 58000, bars: { Power: 55, Speed: 78, Luxury: 60, 'Off-road': 10 },
+                    path: 'M62 200 L62 160 Q64 148 82 144 L134 138 Q154 94 204 88 L330 86 Q396 90 426 130 L520 142 Q550 150 551 174 L551 200 Z',
+                    glass: 'M160 130 Q176 98 208 94 L324 92 Q382 96 408 128 Z', pil: [{ x: 262, y: 94, h: 36 }],
+                    doors: [170, 262], dy: 130, wheels: [150, 440], head: [535, 152], tail: [62, 150, 5, 18], mirror: [400, 126], spoiler: [58, 132, 46]
+                }
+            ];
+            const PAINTS = [
+                { name: 'Obsidian Black', color: '#0d0d10' }, { name: 'Diamond White', color: '#f1f1ee' },
+                { name: 'Selenite Grey', color: '#6c7076' }, { name: 'Signal Red', color: '#c1121f' },
+                { name: 'Sunset Orange', color: '#e8601c' }, { name: 'Electric Blue', color: '#1769e0' },
+                { name: 'Emerald Green', color: '#1d6b4a' }, { name: 'Designo Gold', color: '#c9a227' }
+            ];
+            const KEY = 'srshow';
+
+            const view = document.getElementById('srView');
+            if (!view) return;
+            let st = { model: 0, paint: 0 };
+            try {
+                const saved = JSON.parse(localStorage.getItem(KEY));
+                if (saved && saved.model < MODELS.length && saved.paint < PAINTS.length) st = saved;
+            } catch (e) { /* storage unavailable */ }
+
+            function wheel(cx) {
+                let spokes = '';
+                for (let i = 0; i < 5; i++) {
+                    spokes += '<rect x="' + (cx - 4) + '" y="173" width="8" height="19" fill="#d0d3d8" transform="rotate(' + (i * 72) + ' ' + cx + ' 196)"/>';
+                }
+                return '<circle cx="' + cx + '" cy="196" r="36" fill="#0e0e10"/><circle cx="' + cx + '" cy="196" r="31" fill="none" stroke="#232326" stroke-width="2"/>' +
+                    '<circle cx="' + cx + '" cy="196" r="25" fill="#1b1b1e"/>' +
+                    '<g class="sr-spin">' + spokes + '<circle cx="' + cx + '" cy="196" r="25" fill="none" stroke="#d0d3d8" stroke-width="3"/><circle cx="' + cx + '" cy="196" r="6" fill="#d0d3d8"/></g>';
+            }
+
+            function svg(m, paint) {
+                const w1 = m.wheels[0], w2 = m.wheels[1];
+                let road = '';
+                for (let i = 0; i < 9; i++) road += '<rect x="' + (i * 90) + '" y="268" width="46" height="4" fill="#d4af37" opacity="0.6"/>';
+                const b = '<clipPath id="srClip"><path d="' + m.path + '"/></clipPath>' +
+                    (m.spare ? '<rect x="27" y="112" width="19" height="84" rx="9" fill="#18181b"/>' : '') +
+                    '<path d="' + m.path + '" fill="' + paint + '"/><path d="' + m.path + '" fill="url(#srGloss)"/>' +
+                    '<path d="' + m.glass + '" fill="rgb(14,22,30)" fill-opacity="0.85" stroke="#c9ccd1" stroke-width="2"/>' +
+                    '<path d="' + m.glass + '" fill="url(#srGlass)"/>' +
+                    m.pil.map(p => '<rect x="' + p.x + '" y="' + p.y + '" width="9" height="' + p.h + '" fill="' + paint + '"/>').join('') +
+                    '<g stroke="rgba(0,0,0,0.5)" stroke-width="1.5">' + m.doors.map(x => '<line x1="' + x + '" y1="' + m.dy + '" x2="' + x + '" y2="194"/>').join('') + '</g>' +
+                    m.doors.slice(-2).map(x => '<rect x="' + (x - 32) + '" y="' + (m.dy + 10) + '" width="20" height="5" rx="2" fill="#c9ccd1"/>').join('') +
+                    '<g clip-path="url(#srClip)">' + [w1, w2].map(x =>
+                        '<circle cx="' + x + '" cy="196" r="45" fill="#0a0a0c"/>' + (m.flares ? '<circle cx="' + x + '" cy="196" r="47" fill="none" stroke="#111" stroke-width="5"/>' : '')).join('') + '</g>' +
+                    '<rect x="' + (w1 - 95) + '" y="190" width="' + (w2 - w1 + 190) + '" height="10" rx="3" fill="#1a1a1d" opacity="0.7"/>' +
+                    '<ellipse cx="' + m.head[0] + '" cy="' + m.head[1] + '" rx="9" ry="6" fill="#fff8d0" stroke="#c9ccd1" stroke-width="2"/>' +
+                    (m.ev ? '<line x1="' + (m.head[0] - 10) + '" y1="' + (m.head[1] + 4) + '" x2="' + (m.head[0] + 16) + '" y2="' + (m.head[1] + 4) + '" stroke="#fff" stroke-width="2.5"/>' : '') +
+                    '<rect x="' + m.tail[0] + '" y="' + m.tail[1] + '" width="' + m.tail[2] + '" height="' + m.tail[3] + '" fill="#ff2323"/>' +
+                    '<rect x="' + m.mirror[0] + '" y="' + m.mirror[1] + '" width="13" height="15" rx="3" fill="' + paint + '" stroke="#c9ccd1" stroke-width="2"/>' +
+                    (m.spoiler ? '<rect x="' + m.spoiler[0] + '" y="' + m.spoiler[1] + '" width="' + m.spoiler[2] + '" height="5" rx="2" fill="#111"/><rect x="' + (m.spoiler[0] + 8) + '" y="' + (m.spoiler[1] + 5) + '" width="4" height="10" fill="#111"/>' : '') +
+                    '<text x="' + ((w1 + w2) / 2) + '" y="188" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="10" fill="#c9ccd1" letter-spacing="2">MERCEDES</text>';
+                return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-label="' + m.name + '">' +
+                    '<defs><radialGradient id="srBg" cx="0.5" cy="0.4" r="0.8"><stop offset="0" stop-color="#3a3a40"/><stop offset="1" stop-color="#050506"/></radialGradient>' +
+                    '<linearGradient id="srGloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.45"/><stop offset="0.4" stop-color="#fff" stop-opacity="0.04"/><stop offset="1" stop-color="#000" stop-opacity="0.35"/></linearGradient>' +
+                    '<linearGradient id="srGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.22"/><stop offset="0.5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>' +
+                    '<rect width="640" height="300" fill="url(#srBg)"/><rect y="232" width="640" height="68" fill="#0c0c0e"/><rect y="231" width="640" height="2" fill="#d4af37"/>' +
+                    '<g class="sr-road">' + road + '</g>' +
+                    '<ellipse cx="310" cy="234" rx="280" ry="7" fill="#000" opacity="0.6"/>' +
+                    '<g class="g63-car">' + wheel(w1) + wheel(w2) + b + '</g></svg>';
+            }
+
+            function render() {
+                const m = MODELS[st.model];
+                view.innerHTML = svg(m, PAINTS[st.paint].color);
+                document.getElementById('srName').textContent = m.name;
+                document.getElementById('srTag').textContent = m.tag;
+                document.getElementById('srPrice').textContent = '$' + m.price.toLocaleString('en-US');
+                document.getElementById('srReadout').textContent = m.hp + ' hp  ·  0-60 mph in ' + m.sec + ' s  ·  top speed ' + m.mph + ' mph';
+                document.getElementById('srBars').innerHTML = Object.keys(m.bars).map(k =>
+                    '<div class="g63-bar"><span>' + k + '</span><div class="g63-track"><div class="g63-fill" style="width:' + m.bars[k] + '%"></div></div><span>' + m.bars[k] + '</span></div>').join('');
+                document.querySelectorAll('#srModels .g63-opt').forEach((b, i) => b.classList.toggle('on', i === st.model));
+                document.querySelectorAll('#srPaints .g63-sw').forEach((b, i) => b.classList.toggle('on', i === st.paint));
+                try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { /* ignore */ }
+            }
+
+            const models = document.getElementById('srModels');
+            models.innerHTML = MODELS.map((m, i) => '<button type="button" class="g63-opt" data-i="' + i + '">' + m.name.replace('Mercedes-', '') + '</button>').join('');
+            models.addEventListener('click', e => {
+                const b = e.target.closest('[data-i]');
+                if (b) { st.model = +b.dataset.i; render(); }
+            });
+            const paints = document.getElementById('srPaints');
+            paints.innerHTML = PAINTS.map((p, i) => '<button type="button" class="g63-sw" style="--c:' + p.color + '" title="' + p.name + '" aria-label="' + p.name + '" data-i="' + i + '"></button>').join('');
+            paints.addEventListener('click', e => {
+                const b = e.target.closest('[data-i]');
+                if (b) { st.paint = +b.dataset.i; render(); }
+            });
+            document.getElementById('srPrev').addEventListener('click', () => { st.model = (st.model + MODELS.length - 1) % MODELS.length; render(); });
+            document.getElementById('srNext').addEventListener('click', () => { st.model = (st.model + 1) % MODELS.length; render(); });
+            document.getElementById('srDrive').addEventListener('click', () => view.classList.toggle('drive'));
 
             render();
         })();
