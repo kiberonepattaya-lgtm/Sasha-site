@@ -39,6 +39,9 @@
     #carname small { display: block; font-size: .38em; letter-spacing: 3px; color: #9fb4c8; font-family: Arial, sans-serif; }
     #driveBtn { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); background: #e8c33a; color: #111; border: none; padding: 14px 54px; font-size: 1.6em; letter-spacing: 4px; border-radius: 6px; box-shadow: 0 6px 24px rgba(232, 195, 58, .35); }
     #driveBtn:hover { background: #ffd84d; }
+    #homeBtn, .homebtn { background: #263243; color: #fff; text-decoration: none; padding: 12px 28px; font-size: 1.1em; letter-spacing: 3px; border-radius: 6px; border: 1px solid #3a4a60; }
+    #homeBtn:hover, .homebtn:hover { background: #34455d; }
+    #homeBtn { position: absolute; top: 18px; right: 24px; }
     .gnote { position: absolute; bottom: 12px; right: 24px; font-size: .75em; color: #5d7088; font-family: Arial, sans-serif; letter-spacing: 1px; }
 
     /* ---------- HUD ---------- */
@@ -97,6 +100,7 @@
         <div id="stats"></div>
     </div>
     <div id="carname"></div>
+    <a id="homeBtn" href="index.html">&larr; BACK TO MY SITE</a>
     <button id="driveBtn">DRIVE</button>
     <div class="gnote">Drag to rotate &middot; scroll to zoom &middot; keyboard + mouse game</div>
 </div>
@@ -128,6 +132,7 @@ IN CAR    W gas   S brake/reverse   A D steer   Space handbrake
     </pre>
     <button id="resumeBtn">RESUME</button>
     <button id="garageBtn" class="alt">BACK TO GARAGE</button>
+    <a id="homeBtn2" class="homebtn" href="index.html">&larr; BACK TO MY SITE</a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
