@@ -2013,12 +2013,44 @@
     </script>
 
     <!-- Car that follows the mouse -->
-    <div id="carFollower" aria-hidden="true" style="position:fixed;left:0;top:0;z-index:99999;pointer-events:none;display:none;font-size:34px;line-height:1">&#128665;</div>
-    <button type="button" id="carToggle" aria-pressed="true" style="position:fixed;right:10px;bottom:10px;z-index:100000;padding:8px 16px;font-size:0.85em;letter-spacing:2px">Car: On</button>
+    <div id="carFollower" aria-hidden="true" style="position:fixed;left:0;top:0;z-index:99999;pointer-events:none;display:none;font-size:34px;line-height:1"><span id="carIcon" style="display:inline-block">&#128665;</span></div>
+    <div style="position:fixed;right:10px;bottom:10px;z-index:100000;display:flex;gap:6px">
+        <button type="button" id="detailsToggle" aria-pressed="false" style="padding:8px 16px;font-size:0.85em;letter-spacing:2px">Details: Off</button>
+        <button type="button" id="carToggle" aria-pressed="true" style="padding:8px 16px;font-size:0.85em;letter-spacing:2px">Car: On</button>
+    </div>
     <script>
         (function () {
             var car = document.getElementById('carFollower');
             var toggle = document.getElementById('carToggle');
+            var dBtn = document.getElementById('detailsToggle');
+            var carIcon = document.getElementById('carIcon');
+            var details = false;
+            try { details = localStorage.getItem('carDetails') === 'true'; } catch (e) {}
+            // Details mode: name tag with speed, headlight glow and exhaust smoke
+            var tag = document.createElement('div');
+            tag.style.cssText = "position:absolute;left:38px;top:-4px;white-space:nowrap;font:11px 'Oswald',Impact,sans-serif;letter-spacing:2px;text-transform:uppercase;background:#1A1A1A;color:#EEF4EC;border-left:3px solid #D4AF37;padding:2px 6px;display:none";
+            var glow = document.createElement('div');
+            glow.style.cssText = 'position:absolute;left:-26px;top:10px;width:30px;height:16px;border-radius:50%;background:radial-gradient(ellipse at right,rgba(255,236,160,.85),rgba(255,236,160,0));display:none';
+            car.appendChild(tag); car.appendChild(glow);
+            function renderDetails() {
+                dBtn.textContent = details ? 'Details: On' : 'Details: Off';
+                dBtn.setAttribute('aria-pressed', String(details));
+                tag.style.display = glow.style.display = details ? 'block' : 'none';
+            }
+            dBtn.addEventListener('click', function () {
+                details = !details;
+                try { localStorage.setItem('carDetails', String(details)); } catch (e) {}
+                renderDetails();
+            });
+            renderDetails();
+            var lastPuff = 0;
+            function puff(x, y) {
+                var p = document.createElement('div');
+                p.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;width:9px;height:9px;border-radius:50%;background:rgba(200,200,200,.55);pointer-events:none;z-index:99998;transition:transform .8s ease-out,opacity .8s ease-out';
+                document.body.appendChild(p);
+                requestAnimationFrame(function () { p.style.transform = 'translate(' + ((Math.random() - 0.5) * 16) + 'px,-14px) scale(2.4)'; p.style.opacity = '0'; });
+                setTimeout(function () { p.remove(); }, 850);
+            }
             var carOn = true;
             try { carOn = localStorage.getItem('carOn') !== 'false'; } catch (e) {}
             function renderToggle() {
@@ -2041,7 +2073,22 @@
                 var dx = mx - cx;
                 cx += dx * 0.12; cy += (my - cy) * 0.12;
                 if (Math.abs(dx) > 1.5) faceLeft = dx < 0;
-                car.style.transform = 'translate(' + (cx + 14) + 'px,' + (cy + 14) + 'px) scaleX(' + (faceLeft ? 1 : -1) + ')';
+                var spd = Math.hypot(dx, my - cy);
+                car.style.transform = 'translate(' + (cx + 14) + 'px,' + (cy + 14) + 'px)';
+                // flip only the emoji so the tag text stays readable
+                glow.style.left = faceLeft ? '-26px' : '34px';
+                glow.style.background = 'radial-gradient(ellipse at ' + (faceLeft ? 'right' : 'left') + ',rgba(255,236,160,.85),rgba(255,236,160,0))';
+                tag.style.left = faceLeft ? '38px' : '-8px';
+                tag.style.transform = faceLeft ? 'none' : 'translateX(-100%)';
+                if (details) {
+                    tag.textContent = 'AMG G 63 · ' + Math.round(spd * 4) + ' km/h';
+                    var now = performance.now();
+                    if (spd > 3 && carOn && now - lastPuff > 70) {
+                        lastPuff = now;
+                        puff(cx + 14 + (faceLeft ? 30 : 4), cy + 14 + 22);
+                    }
+                }
+                carIcon.style.transform = 'scaleX(' + (faceLeft ? 1 : -1) + ')';
                 requestAnimationFrame(tick);
             }
             tick();
