@@ -1940,6 +1940,176 @@
         <img src="mercedes logo.jpg" alt="" style="--x:95%; --s:38px; --d:17s; --delay:14s; --dx:70px">
     </div>
 
+    <!-- Mouse trail: canvas, car follower and settings panel -->
+    <canvas id="trailCanvas" aria-hidden="true"></canvas>
+    <div id="carFollower" aria-hidden="true"><span class="cf-car"></span><span class="cf-brand"></span></div>
+    <div id="trailPanel">
+        <button type="button" id="trailPanelToggle" aria-expanded="false" aria-controls="trailPanelBody">Trail</button>
+        <div id="trailPanelBody" hidden>
+            <label class="tp-row tp-check"><input type="checkbox" id="tpOn" checked> Trail on</label>
+            <label class="tp-row">Trail
+                <select id="tpStyle">
+                    <option value="dots">Gold dots</option>
+                    <option value="sparkles">Sparkles</option>
+                    <option value="line">Line</option>
+                    <option value="fire">Fire</option>
+                </select>
+            </label>
+            <label class="tp-row">Car
+                <select id="tpCar">
+                    <option value="suv">SUV</option>
+                    <option value="sports">Sports car</option>
+                    <option value="sedan">Sedan</option>
+                    <option value="none">No car</option>
+                </select>
+            </label>
+            <label class="tp-row">Brand
+                <select id="tpBrand">
+                    <option value="Mercedes-Benz">Mercedes-Benz</option>
+                    <option value="BMW">BMW</option>
+                    <option value="Audi">Audi</option>
+                    <option value="Porsche">Porsche</option>
+                    <option value="Lamborghini">Lamborghini</option>
+                </select>
+            </label>
+        </div>
+    </div>
+    <style>
+        #trailCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9990; }
+        #carFollower { position: fixed; left: 0; top: 0; z-index: 9991; pointer-events: none; display: none; align-items: center; gap: 4px; font-family: 'Oswald', Impact, sans-serif; }
+        #carFollower .cf-car { font-size: 28px; line-height: 1; display: inline-block; }
+        #carFollower .cf-brand { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; background: var(--card); color: var(--ink); border-left: 3px solid var(--moss); padding: 2px 6px; white-space: nowrap; }
+        #trailPanel { position: fixed; right: 10px; bottom: 10px; z-index: 9992; font-family: 'Oswald', Impact, sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; text-align: left; }
+        #trailPanelToggle { display: block; margin-left: auto; padding: 6px 14px; font-size: 12px; letter-spacing: 2px; min-width: 0; }
+        #trailPanelBody { margin-top: 6px; width: 190px; background: var(--card); color: var(--ink); border-left: 4px solid var(--moss); padding: 10px 12px; box-shadow: 0 6px 18px rgba(0, 0, 0, .4); }
+        #trailPanelBody[hidden] { display: none; }
+        #trailPanel .tp-row { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+        #trailPanel .tp-row:last-child { margin-bottom: 0; }
+        #trailPanel .tp-check { flex-direction: row; align-items: center; gap: 8px; cursor: pointer; }
+        #trailPanel select { font: inherit; text-transform: none; letter-spacing: 0; background: var(--surface); color: var(--on-dark); border: 1px solid var(--moss); padding: 3px 4px; }
+        #trailPanel input[type="checkbox"] { accent-color: var(--moss); }
+    </style>
+    <script>
+        // Mouse trail + car follower (only active while the mouse is over the page)
+        (function () {
+            if (!window.matchMedia('(pointer: fine)').matches) {
+                document.getElementById('trailPanel').style.display = 'none';
+                return;
+            }
+            var CARS = { suv: '🚙', sports: '🏎️', sedan: '🚗' };
+            var defaults = { on: true, style: 'dots', car: 'suv', brand: 'Mercedes-Benz' };
+            var s = defaults;
+            try { s = Object.assign({}, defaults, JSON.parse(localStorage.getItem('trailSettings') || '{}')); } catch (e) {}
+            function save() { try { localStorage.setItem('trailSettings', JSON.stringify(s)); } catch (e) {} }
+
+            var canvas = document.getElementById('trailCanvas');
+            var ctx = canvas.getContext('2d');
+            var follower = document.getElementById('carFollower');
+            var carEl = follower.querySelector('.cf-car');
+            var brandEl = follower.querySelector('.cf-brand');
+            var inside = false, mx = 0, my = 0, cx = 0, cy = 0, faceLeft = true;
+            var parts = [], pts = [];
+
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+
+            function applyCar() {
+                carEl.textContent = CARS[s.car] || '';
+                brandEl.textContent = s.car === 'none' ? '' : s.brand;
+            }
+
+            // Controls
+            var on = document.getElementById('tpOn'), st = document.getElementById('tpStyle'),
+                car = document.getElementById('tpCar'), br = document.getElementById('tpBrand');
+            on.checked = s.on; st.value = s.style; car.value = s.car; br.value = s.brand;
+            on.addEventListener('change', function () { s.on = on.checked; if (!s.on) { parts = []; pts = []; } save(); });
+            st.addEventListener('change', function () { s.style = st.value; parts = []; pts = []; save(); });
+            car.addEventListener('change', function () { s.car = car.value; applyCar(); save(); });
+            br.addEventListener('change', function () { s.brand = br.value; applyCar(); save(); });
+            var toggle = document.getElementById('trailPanelToggle'), body = document.getElementById('trailPanelBody');
+            toggle.addEventListener('click', function () {
+                body.hidden = !body.hidden;
+                toggle.setAttribute('aria-expanded', String(!body.hidden));
+            });
+            applyCar();
+
+            // Mouse tracking: effect shows only while the pointer is over the page
+            document.addEventListener('mousemove', function (e) {
+                if (!inside) { cx = e.clientX; cy = e.clientY; }
+                inside = true; mx = e.clientX; my = e.clientY;
+                if (!s.on) return;
+                if (s.style === 'line') {
+                    pts.push({ x: mx, y: my, life: 1 });
+                } else {
+                    var n = s.style === 'fire' ? 2 : 1;
+                    for (var i = 0; i < n; i++) {
+                        parts.push({
+                            x: mx, y: my, life: 1,
+                            vx: (Math.random() - 0.5) * (s.style === 'dots' ? 0.4 : 1.6),
+                            vy: s.style === 'fire' ? -Math.random() * 1.5 - 0.3 : (Math.random() - 0.5) * (s.style === 'dots' ? 0.4 : 1.6),
+                            size: s.style === 'dots' ? 4 : 2 + Math.random() * 4
+                        });
+                    }
+                }
+            });
+            document.documentElement.addEventListener('mouseleave', function () { inside = false; });
+            document.documentElement.addEventListener('mouseenter', function () { inside = true; });
+            window.addEventListener('blur', function () { inside = false; });
+
+            function star(x, y, r) {
+                ctx.beginPath();
+                for (var i = 0; i < 8; i++) {
+                    var a = i * Math.PI / 4, rad = i % 2 ? r * 0.4 : r;
+                    ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad);
+                }
+                ctx.closePath(); ctx.fill();
+            }
+
+            function frame() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (inside && s.on) {
+                    if (s.style === 'line') {
+                        pts = pts.filter(function (p) { p.life -= 0.03; return p.life > 0; });
+                        ctx.lineCap = 'round'; ctx.lineWidth = 4;
+                        for (var i = 1; i < pts.length; i++) {
+                            ctx.strokeStyle = 'rgba(212,175,55,' + pts[i].life + ')';
+                            ctx.beginPath(); ctx.moveTo(pts[i - 1].x, pts[i - 1].y); ctx.lineTo(pts[i].x, pts[i].y); ctx.stroke();
+                        }
+                    } else {
+                        parts = parts.filter(function (p) { p.life -= s.style === 'dots' ? 0.025 : 0.03; return p.life > 0; });
+                        parts.forEach(function (p) {
+                            p.x += p.vx; p.y += p.vy;
+                            ctx.globalAlpha = p.life;
+                            if (s.style === 'fire') {
+                                ctx.fillStyle = p.life > 0.5 ? '#FFB020' : '#E8431A';
+                                ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, 6.283); ctx.fill();
+                            } else if (s.style === 'sparkles') {
+                                ctx.fillStyle = '#E8C75A'; star(p.x, p.y, p.size * (0.5 + p.life));
+                            } else {
+                                ctx.fillStyle = '#D4AF37';
+                                ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, 6.283); ctx.fill();
+                            }
+                        });
+                        ctx.globalAlpha = 1;
+                    }
+                } else { parts = []; pts = []; }
+
+                // Car follows the mouse with a little delay
+                if (inside && s.car !== 'none') {
+                    var dx = mx - cx;
+                    cx += dx * 0.12; cy += (my - cy) * 0.12;
+                    if (Math.abs(dx) > 1.5) faceLeft = dx < 0;
+                    follower.style.display = 'flex';
+                    follower.style.transform = 'translate(' + (cx + 16) + 'px,' + (cy + 16) + 'px)';
+                    carEl.style.transform = faceLeft ? 'none' : 'scaleX(-1)';
+                } else {
+                    follower.style.display = 'none';
+                }
+                requestAnimationFrame(frame);
+            }
+            frame();
+        })();
+    </script>
     <script>
         // Random Fact button: never shows the same fact twice in a row
         (function () {
