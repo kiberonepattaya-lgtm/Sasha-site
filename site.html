@@ -210,10 +210,31 @@
             transition: opacity 0.3s, visibility 0.3s;
         }
 
-        #message.show {
+        #message.show,
+        #spookyModal.show {
             opacity: 1;
             visibility: visible;
         }
+
+        #spookyModal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #spookyModal .popup { font-weight: normal; color: var(--text); }
+        #spookyModal h3 { font-family: 'Oswald', Impact, sans-serif; font-size: 1.3em; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); margin-bottom: 14px; }
+        #spookyModal input[type="text"] { width: 100%; font: inherit; font-size: 1em; padding: 10px 12px; margin-bottom: 14px; background: var(--surface); color: var(--on-dark); border: 1px solid var(--moss); border-radius: 0; }
+        #spookyResult { margin-top: 18px; font-family: 'Oswald', Impact, sans-serif; font-size: 1.5em; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); border-left: 4px solid var(--moss); padding-left: 12px; }
+        #spookyResult[hidden] { display: none; }
 
         .popup {
             position: relative;
@@ -231,7 +252,8 @@
             opacity: 0;
         }
 
-        #message.show .popup {
+        #message.show .popup,
+        #spookyModal.show .popup {
             animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
@@ -1060,6 +1082,13 @@
             <h2>Random Fact</h2>
             <p class="fact-text" id="factText" aria-live="polite">Click the button to learn something new!</p>
             <button type="button" id="factBtn">Random Fact</button>
+        </section>
+
+        <!-- Spooky Name Generator Section -->
+        <section class="section" id="spooky">
+            <h2>Spooky Name Generator</h2>
+            <p>Find out what your name would be on Halloween night.</p>
+            <button type="button" id="spookyOpen">Spooky Name Generator</button>
         </section>
 
         <!-- About Section -->
@@ -1939,6 +1968,48 @@
         <img src="mercedes logo.jpg" alt="" style="--x:88%; --s:72px; --d:19s; --delay:8s; --dx:-40px">
         <img src="mercedes logo.jpg" alt="" style="--x:95%; --s:38px; --d:17s; --delay:14s; --dx:70px">
     </div>
+
+    <!-- Spooky name pop-up -->
+    <div id="spookyModal" onclick="if (event.target === this) closeSpooky()">
+        <div class="popup" role="dialog" aria-labelledby="spookyTitle">
+            <button type="button" class="popup-close" id="spookyClose" aria-label="Close">&times;</button>
+            <form id="spookyForm">
+                <h3 id="spookyTitle">What's your name?</h3>
+                <input type="text" id="spookyName" maxlength="30" autocomplete="off" placeholder="Type your name">
+                <button type="submit">Get my spooky name</button>
+            </form>
+            <p id="spookyResult" hidden aria-live="polite"></p>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var TITLES = ['Count', 'Countess', 'Baron', 'Lady', 'Lord', 'Professor', 'Captain', 'Sir', 'Madam', 'Doctor', 'Witch', 'Duke'];
+            var ENDINGS = ['the Moonlit', 'the Haunted', 'of the Graveyard', 'the Shadow Walker', 'the Cursed', 'the Bone Collector', 'of the Midnight Fog', 'the Ghostly', 'the Pumpkin King', 'of the Whispering Crypt', 'the Wicked', 'the Batwinged'];
+            var modal = document.getElementById('spookyModal');
+            var input = document.getElementById('spookyName');
+            var result = document.getElementById('spookyResult');
+            var lastName = '';
+            function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+            window.closeSpooky = function () { modal.classList.remove('show'); };
+            document.getElementById('spookyOpen').addEventListener('click', function () {
+                result.hidden = true; result.textContent = '';
+                modal.classList.add('show');
+                setTimeout(function () { input.focus(); }, 50);
+            });
+            document.getElementById('spookyClose').addEventListener('click', window.closeSpooky);
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.closeSpooky(); });
+            document.getElementById('spookyForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                var name = input.value.trim();
+                if (!name) { input.focus(); return; }
+                var out;
+                do { out = pick(TITLES) + ' ' + name + ' ' + pick(ENDINGS); } while (out === lastName);
+                lastName = out;
+                result.textContent = out;
+                result.hidden = false;
+            });
+        })();
+    </script>
 
     <!-- Car that follows the mouse -->
     <div id="carFollower" aria-hidden="true" style="position:fixed;left:0;top:0;z-index:99999;pointer-events:none;display:none;font-size:34px;line-height:1">&#128665;</div>
