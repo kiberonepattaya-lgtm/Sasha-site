@@ -557,6 +557,13 @@
             opacity: 0.85;
         }
 
+        /* Random Fact */
+        .section .fact-text {
+            min-height: 3.2em;
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+
         /* Footer */
         footer {
             background: var(--footer);
@@ -1058,6 +1065,13 @@
         <section class="section" id="hobbies">
             <h2>My Hobbies</h2>
             <p>I enjoy sports and staying active. I practice gymnastics and love running in my free time because they help me stay fit, healthy, and energetic. I also enjoy learning new things and discovering new skills. I like challenging myself, improving every day, and trying new experiences that help me grow as a person.</p>
+        </section>
+
+        <!-- Random Fact Section -->
+        <section class="section" id="fact">
+            <h2>Random Fact</h2>
+            <p class="fact-text" id="factText" aria-live="polite">Click the button to learn something new!</p>
+            <button type="button" id="factBtn">Random Fact</button>
         </section>
 
         <!-- Gallery Section -->
@@ -1924,5 +1938,45 @@
         <img src="mercedes logo.jpg" alt="" style="--x:88%; --s:72px; --d:19s; --delay:8s; --dx:-40px">
         <img src="mercedes logo.jpg" alt="" style="--x:95%; --s:38px; --d:17s; --delay:14s; --dx:70px">
     </div>
+
+    <script>
+        // Random Fact button: never shows the same fact twice in a row
+        (function () {
+            var FACTS = [
+                'Octopuses have three hearts and blue blood.',
+                'A group of flamingos is called a flamboyance.',
+                'Honey never spoils: edible honey has been found in ancient Egyptian tombs.',
+                'A day on Venus is longer than a year on Venus.',
+                'Neutron stars are so dense that a teaspoon of one would weigh about a billion tons.',
+                'There are more stars in the universe than grains of sand on all of Earth\'s beaches.',
+                'The Moon is slowly drifting away from Earth by about 3.8 cm every year.',
+                'More than 80% of the ocean has never been mapped or explored.',
+                'The Great Barrier Reef is the largest living structure on Earth and can be seen from space.',
+                'Sharks are older than trees: they have existed for over 400 million years.',
+                'Dolphins sleep with one half of their brain at a time.',
+                'The Great Wall of China is not visible to the naked eye from the Moon.',
+                'Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramid.',
+                'Oxford University is older than the Aztec Empire.',
+                'The shortest war in history lasted only about 38 minutes, between Britain and Zanzibar in 1896.',
+                'Bananas are slightly radioactive because they contain potassium-40.',
+                'Water can boil and freeze at the same time at its triple point.',
+                'Lightning is about five times hotter than the surface of the Sun.',
+                'A single bolt of lightning contains enough energy to toast around 100,000 slices of bread.',
+                'Wombats produce cube-shaped poop.',
+                'Sea otters hold hands while sleeping so they don\'t drift apart.',
+                'The Mariana Trench is deeper than Mount Everest is tall.',
+                'Sunlight takes about 8 minutes to travel from the Sun to Earth.',
+                'Crows can recognize human faces and remember them for years.'
+            ];
+            var last = -1;
+            var text = document.getElementById('factText');
+            document.getElementById('factBtn').addEventListener('click', function () {
+                var i;
+                do { i = Math.floor(Math.random() * FACTS.length); } while (i === last);
+                last = i;
+                text.textContent = FACTS[i];
+            });
+        })();
+    </script>
 </body>
 </html>
