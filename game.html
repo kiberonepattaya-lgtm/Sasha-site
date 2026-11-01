@@ -430,6 +430,7 @@ function buildCity() {
     const bases = ['#8a8f99', '#a79c8d', '#6f7d8c', '#9aa5b1', '#7d6f6a', '#b7b2a6'];
     const texs = bases.map(b => winTexture(b, pick(['#ffe9a8', '#bfe3ff'])));
     for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+        if (i === CLUB.bi && j === CLUB.bj) continue; // this block holds the nightclub
         for (const ox of [-14.5, 14.5]) for (const oz of [-14.5, 14.5]) {
             if (Math.random() < 0.12) continue;
             const w = rnd(20, 26), d = rnd(20, 26);
@@ -446,8 +447,96 @@ function buildCity() {
             colliders.push({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2 });
         }
     }
+    buildClub();
     cityBuilt = true;
 }
+
+/* ================= Nightclub ================= */
+const CLUB = { bi: 3, bj: 3, x: 0, z: 0, w: 50, d: 40, lights: [], ball: null };
+CLUB.x = blockC(CLUB.bi); CLUB.z = blockC(CLUB.bj);
+const CLUB_DOOR = 6; // door gap width (front wall faces the road, -z side)
+function clubBox(w, h, d, color, x, y, z, solid, emissive) {
+    const mat = emissive ? new THREE.MeshBasicMaterial({ color }) : new THREE.MeshLambertMaterial({ color });
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    scene.add(m);
+    if (solid) colliders.push({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2 });
+    return m;
+}
+function buildClub() {
+    const cx = CLUB.x, cz = CLUB.z, w = CLUB.w, d = CLUB.d, H = 8, T = 1;
+    const x0 = cx - w / 2, x1 = cx + w / 2, z0 = cz - d / 2, z1 = cz + d / 2;
+    const wall = 0x1b1b24, trim = 0xff2bd6;
+    // walls (front wall has a door gap in the middle)
+    const seg = (w - CLUB_DOOR) / 2;
+    clubBox(seg, H, T, wall, x0 + seg / 2, H / 2, z0, true);
+    clubBox(seg, H, T, wall, x1 - seg / 2, H / 2, z0, true);
+    clubBox(CLUB_DOOR, H - 5, T, wall, cx, H - (H - 5) / 2, z0, false); // lintel over the door
+    clubBox(w, H, T, wall, cx, H / 2, z1, true);
+    clubBox(T, H, d, wall, x0, H / 2, cz, true);
+    clubBox(T, H, d, wall, x1, H / 2, cz, true);
+    // neon trim along the top and around the door
+    clubBox(w + 0.4, 0.3, 0.3, trim, cx, H + 0.15, z0, false, true);
+    clubBox(CLUB_DOOR + 0.6, 0.25, 0.25, 0x00e5ff, cx, 5, z0 - 0.4, false, true);
+    clubBox(0.25, 5, 0.25, 0x00e5ff, cx - CLUB_DOOR / 2 - 0.3, 2.5, z0 - 0.4, false, true);
+    clubBox(0.25, 5, 0.25, 0x00e5ff, cx + CLUB_DOOR / 2 + 0.3, 2.5, z0 - 0.4, false, true);
+    // sign
+    const sc = document.createElement('canvas'); sc.width = 512; sc.height = 128;
+    const g = sc.getContext('2d');
+    g.fillStyle = '#0a0a12'; g.fillRect(0, 0, 512, 128);
+    g.font = 'bold 84px Impact, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.shadowColor = '#ff2bd6'; g.shadowBlur = 24; g.fillStyle = '#ff7ae8';
+    g.fillText('CLUB SASHA', 256, 68); g.fillText('CLUB SASHA', 256, 68);
+    const sign = new THREE.Mesh(new THREE.PlaneGeometry(24, 6), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), side: THREE.DoubleSide }));
+    sign.position.set(cx, H + 3.6, z0 - 0.3);
+    scene.add(sign);
+    // dance floor with coloured tiles
+    const fc = document.createElement('canvas'); fc.width = fc.height = 256;
+    const f = fc.getContext('2d');
+    const cols = ['#ff2bd6', '#00e5ff', '#7a3cff', '#39ff14', '#ffc400'];
+    for (let a = 0; a < 8; a++) for (let b = 0; b < 8; b++) {
+        f.fillStyle = (a + b) % 2 ? '#14141c' : cols[(a * 3 + b) % cols.length];
+        f.globalAlpha = (a + b) % 2 ? 1 : 0.75;
+        f.fillRect(a * 32, b * 32, 32, 32);
+    }
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(w - 2, d - 2).rotateX(-Math.PI / 2),
+        new THREE.MeshLambertMaterial({ map: new THREE.CanvasTexture(fc) }));
+    floor.material.map.wrapS = floor.material.map.wrapT = THREE.RepeatWrapping;
+    floor.material.map.repeat.set(5, 4);
+    floor.position.set(cx, 0.03, cz);
+    scene.add(floor);
+    // DJ booth + speakers (back wall), bar (left wall)
+    clubBox(10, 1.2, 2.6, 0x2a2a38, cx, 0.6, z1 - 3, true);
+    clubBox(9.6, 0.15, 2.2, 0x00e5ff, cx, 1.28, z1 - 3, false, true);
+    clubBox(2, 4, 2, 0x111118, cx - 8, 2, z1 - 2, true);
+    clubBox(2, 4, 2, 0x111118, cx + 8, 2, z1 - 2, true);
+    clubBox(2, 4, 2, 0x111118, x0 + 2, 2, z0 + 3, true);
+    clubBox(2, 4, 2, 0x111118, x1 - 2, 2, z0 + 3, true);
+    clubBox(2.2, 1.3, 20, 0x3a2a1a, x0 + 3, 0.65, cz + 4, true);
+    clubBox(0.15, 0.15, 20, 0xffc400, x0 + 3.9, 1.35, cz + 4, false, true);
+    for (let k = 0; k < 4; k++) clubBox(0.5, 3, 0.5, 0x2a2a38, x0 + 1.2, 1.5, cz - 4 + k * 4, false); // bottle shelf posts
+    // disco ball + moving coloured lights
+    CLUB.ball = new THREE.Mesh(new THREE.SphereGeometry(1.1, 12, 10), new THREE.MeshBasicMaterial({ color: 0xdddddd }));
+    CLUB.ball.position.set(cx, 7, cz);
+    scene.add(CLUB.ball);
+    [[-12, -8], [12, -8], [0, 10]].forEach((p, i) => {
+        const l = new THREE.PointLight([0xff2bd6, 0x00e5ff, 0x7a3cff][i], 1.1, 34);
+        l.position.set(cx + p[0], 6, cz + p[1]);
+        scene.add(l);
+        CLUB.lights.push({ l, ox: p[0], oz: p[1], ph: i * 2.1 });
+    });
+}
+function updateClub() {
+    if (!CLUB.ball) return;
+    CLUB.ball.rotation.y = time * 1.5;
+    const hues = [0xff2bd6, 0x00e5ff, 0x7a3cff, 0x39ff14, 0xffc400];
+    CLUB.lights.forEach((o, i) => {
+        o.l.position.x = CLUB.x + o.ox + Math.sin(time * 0.9 + o.ph) * 6;
+        o.l.position.z = CLUB.z + o.oz + Math.cos(time * 0.7 + o.ph) * 5;
+        o.l.color.setHex(hues[(Math.floor(time * 1.2) + i) % hues.length]);
+    });
+}
+function inClub(x, z) { return Math.abs(x - CLUB.x) < CLUB.w / 2 + 1 && Math.abs(z - CLUB.z) < CLUB.d / 2 + 1; }
 
 function pushOut(x, z, r) {
     let hit = false;
@@ -532,6 +621,31 @@ function spawnPed() {
     scene.add(mesh);
     const dir = p.alongZ ? (Math.random() < 0.5 ? 0 : Math.PI) : (Math.random() < 0.5 ? Math.PI / 2 : -Math.PI / 2);
     peds.push({ mesh, x: p.x, z: p.z, dir, speed: rnd(1.3, 2.0), hp: 100, dead: false, t: rnd(2, 6), flee: 0, dieT: 0, ph: Math.random() * 6 });
+}
+
+// People in and around the nightclub: dancers, DJ, bartender, bouncers and a queue outside
+const BRIGHT = [0xff2bd6, 0x00e5ff, 0x7a3cff, 0x39ff14, 0xffc400, 0xff3030, 0xf4f4f4];
+function spawnClubPed(kind, x, z, dir) {
+    let mesh;
+    if (kind === 'bouncer') mesh = buildPerson(0x0b0b0e, pick(SKINS), 0x0b0b0e);
+    else if (kind === 'dj') mesh = buildPerson(0x00e5ff, pick(SKINS), 0x111118);
+    else if (kind === 'bartender') mesh = buildPerson(0xf4f4f4, pick(SKINS), 0x0b0b0e);
+    else if (kind === 'queue') mesh = buildPerson(pick(SHIRTS), pick(SKINS), 0x222a36);
+    else mesh = buildPerson(pick(BRIGHT), pick(SKINS), pick([0x111118, 0x1a1a3a, 0x2a1a3a]));
+    mesh.position.set(x, 0, z);
+    scene.add(mesh);
+    peds.push({ mesh, x, z, dir: dir || 0, speed: 1.6, hp: 100, dead: false, t: 0, flee: 0, dieT: 0, ph: Math.random() * 6,
+        club: kind, home: { x, z }, still: kind !== 'dancer' });
+}
+function spawnClubCrowd() {
+    const cx = CLUB.x, cz = CLUB.z, z0 = cz - CLUB.d / 2, z1 = cz + CLUB.d / 2;
+    for (let i = 0; i < 22; i++) spawnClubPed('dancer', cx + rnd(-12, 12), cz + rnd(-9, 9), rnd(0, 6.28));
+    spawnClubPed('dj', cx, z1 - 4.8, Math.PI);
+    spawnClubPed('bartender', CLUB.x - CLUB.w / 2 + 5, cz + 4, -Math.PI / 2);
+    spawnClubPed('bartender', CLUB.x - CLUB.w / 2 + 5, cz - 3, -Math.PI / 2);
+    spawnClubPed('bouncer', cx - 2.6, z0 - 1.5, 0);
+    spawnClubPed('bouncer', cx + 2.6, z0 - 1.5, 0);
+    for (let k = 0; k < 6; k++) spawnClubPed('queue', cx + 5.5 + k * 1.3, z0 - 3, -Math.PI / 2);
 }
 
 /* ================= Car physics ================= */
@@ -869,7 +983,8 @@ $('driveBtn').onclick = () => {
     if (!started) {
         P.mesh = buildPerson(0x111111, 0xd9a273, 0x2a4a7a, true);
         scene.add(P.mesh);
-        for (let i = 0; i < 70; i++) spawnPed();
+        for (let i = 0; i < 110; i++) spawnPed();
+        spawnClubCrowd();
         for (let i = 0; i < 28; i++) {
             let p;
             do { p = roadPoint(9.5); } while (nearIntersection(p));
@@ -942,6 +1057,8 @@ function drawMap() {
     }
     mapCtx.fillStyle = '#e4572e';
     for (const p of peds) if (!p.dead && Math.hypot(p.x - hx, p.z - hz) < 55) { const [a, b] = tx(p.x, p.z); mapCtx.fillRect(a - 1, b - 1, 2, 2); }
+    // nightclub marker
+    { const [a, b] = tx(CLUB.x, CLUB.z); mapCtx.fillStyle = '#ff2bd6'; mapCtx.fillRect(a - 4, b - 4, 8, 8); }
     mapCtx.restore();
     mapCtx.fillStyle = '#fff';
     mapCtx.beginPath();
@@ -1073,6 +1190,7 @@ function update(dt) {
     }
     P.heat = Math.max(0, P.heat - dt * 0.12);
     // ----- peds
+    updateClub();
     for (let i = peds.length - 1; i >= 0; i--) {
         const p = peds[i];
         if (p.dead) {
@@ -1080,7 +1198,43 @@ function update(dt) {
             p.x += (p.kx || 0) * dt; p.z += (p.kz || 0) * dt;
             p.kx *= 0.9; p.kz *= 0.9;
             p.mesh.position.set(p.x, 0.25, p.z);
-            if (p.dieT <= 0) { scene.remove(p.mesh); peds.splice(i, 1); setTimeout(spawnPed, 2000); }
+            if (p.dieT <= 0) {
+                scene.remove(p.mesh); peds.splice(i, 1);
+                if (p.club) { const k = p.club, h = p.home; setTimeout(() => spawnClubPed(k, h.x, h.z, p.dir), 4000); }
+                else setTimeout(spawnPed, 2000);
+            }
+            continue;
+        }
+        if (p.club) {
+            // club people stay at their spot; dancers shuffle and bounce, others stand still
+            let sp = 0;
+            if (p.flee > 0) {
+                p.flee -= dt;
+                p.dir = Math.atan2(p.x - P.x, p.z - P.z);
+                sp = 5.5;
+            } else {
+                const hx = p.home.x - p.x, hz = p.home.z - p.z, hd = Math.hypot(hx, hz);
+                if (hd > 1.2) { p.dir = Math.atan2(hx, hz); sp = 2.2; }
+                else if (!p.still) { p.dir += dt * 1.5; sp = 0; }
+            }
+            p.x += Math.sin(p.dir) * sp * dt; p.z += Math.cos(p.dir) * sp * dt;
+            p.x = clamp(p.x, -BND, BND); p.z = clamp(p.z, -BND, BND);
+            const r = pushOut(p.x, p.z, 0.4);
+            if (r) { p.x = r.x; p.z = r.z; }
+            for (const c of cars) {
+                if (Math.hypot(c.vx, c.vz) > 5 && Math.hypot(c.x - p.x, c.z - p.z) < c.spec.W * 0.9 + 0.7) {
+                    hitPed(p, 999, c.vx, c.vz);
+                    if (c.driver === 'player') crime(0.5);
+                    break;
+                }
+            }
+            if (p.dead) continue;
+            let y = 0, sw = 0;
+            if (sp > 0) sw = Math.sin((time + p.ph) * (sp > 3 ? 12 : 7)) * 0.6;
+            else if (!p.still) { y = Math.abs(Math.sin((time + p.ph) * 6)) * 0.18; sw = Math.sin((time + p.ph) * 6) * 0.5; }
+            p.mesh.position.set(p.x, y, p.z);
+            p.mesh.rotation.y = p.dir;
+            p.mesh.userData.legs[0].rotation.x = sw; p.mesh.userData.legs[1].rotation.x = -sw;
             continue;
         }
         p.t -= dt;
