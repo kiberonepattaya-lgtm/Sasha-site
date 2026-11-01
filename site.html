@@ -2014,11 +2014,26 @@
 
     <!-- Car that follows the mouse -->
     <div id="carFollower" aria-hidden="true" style="position:fixed;left:0;top:0;z-index:99999;pointer-events:none;display:none;font-size:34px;line-height:1">&#128665;</div>
+    <button type="button" id="carToggle" aria-pressed="true" style="position:fixed;right:10px;bottom:10px;z-index:100000;padding:8px 16px;font-size:0.85em;letter-spacing:2px">Car: On</button>
     <script>
         (function () {
             var car = document.getElementById('carFollower');
+            var toggle = document.getElementById('carToggle');
+            var carOn = true;
+            try { carOn = localStorage.getItem('carOn') !== 'false'; } catch (e) {}
+            function renderToggle() {
+                toggle.textContent = carOn ? 'Car: On' : 'Car: Off';
+                toggle.setAttribute('aria-pressed', String(carOn));
+                if (!carOn) car.style.display = 'none';
+            }
+            toggle.addEventListener('click', function () {
+                carOn = !carOn;
+                try { localStorage.setItem('carOn', String(carOn)); } catch (e) {}
+                renderToggle();
+            });
+            renderToggle();
             var mx = 0, my = 0, cx = 0, cy = 0, seen = false, faceLeft = true;
-            function move(e) { mx = e.clientX; my = e.clientY; if (!seen) { cx = mx; cy = my; seen = true; } car.style.display = 'block'; }
+            function move(e) { mx = e.clientX; my = e.clientY; if (!seen) { cx = mx; cy = my; seen = true; } if (carOn) car.style.display = 'block'; }
             document.addEventListener('mousemove', move);
             document.addEventListener('pointermove', move);
             document.documentElement.addEventListener('mouseleave', function () { car.style.display = 'none'; });
